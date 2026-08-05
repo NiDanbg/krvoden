@@ -19,156 +19,6 @@ const authorData = {
     "novels": [
         {
             "i18n": {
-                "bg": {
-                    "cover": "images/bg/dyrvoto-na-syznanieto.webp",
-                    "excerpt": "books/bg/dyrvoto-na-syznanieto.md",
-                    "genre": "Трилър, Конспиративен трилър",
-                    "synopsis": "synopsis/bg/dyrvoto-na-syznanieto.txt",
-                    "title": "Дървото на съзнанието"
-                },
-                "de": {
-                    "cover": "images/de/der-baum-des-bewusstseins.webp",
-                    "excerpt": "books/de/dyrvoto-na-syznanieto.md",
-                    "genre": "Techno-Thriller, Verschwörungsthriller",
-                    "synopsis": "synopsis/de/dyrvoto-na-syznanieto.txt",
-                    "title": "Der Baum des Bewusstseins"
-                },
-                "en": {
-                    "cover": "images/en/the-tree-of-consciousness.webp",
-                    "excerpt": "books/en/dyrvoto-na-syznanieto.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/en/dyrvoto-na-syznanieto.txt",
-                    "title": "The Tree of Consciousness"
-                },
-                "es": {
-                    "cover": "images/es/Cover-El_Arbol_de_la_Conciencia-EL-ES.webp",
-                    "excerpt": "books/es/dyrvoto-na-syznanieto.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/es/dyrvoto-na-syznanieto.txt",
-                    "title": "El Árbol de la Conciencia"
-                },
-                "fr": {
-                    "cover": "images/fr/larbre-de-la-conscience.webp",
-                    "excerpt": "books/fr/dyrvoto-na-syznanieto.md",
-                    "genre": "Techno-thriller, Thriller conspirationniste",
-                    "synopsis": "synopsis/fr/dyrvoto-na-syznanieto.txt",
-                    "title": "L'Arbre de la Conscience"
-                },
-                "it": {
-                    "cover": "images/it/lalbero-della-coscienza.webp",
-                    "excerpt": "books/it/dyrvoto-na-syznanieto.md",
-                    "genre": "Techno-thriller, Thriller cospirativo",
-                    "synopsis": "synopsis/it/dyrvoto-na-syznanieto.txt",
-                    "title": "L'Albero della Coscienza"
-                },
-                "nl": {
-                    "cover": "images/nl/Cover-De_Boom_van_het_Bewustzijn-EL-NL.webp",
-                    "excerpt": "books/nl/dyrvoto-na-syznanieto.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/nl/dyrvoto-na-syznanieto.txt",
-                    "title": "De Boom van het Bewustzijn"
-                },
-                "pt": {
-                    "cover": "images/pt/Cover-A_Arvore_da_Consciencia-EL-PT.webp",
-                    "excerpt": "books/pt/dyrvoto-na-syznanieto.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/pt/dyrvoto-na-syznanieto.txt",
-                    "title": "A Árvore da Consciência"
-                },
-                "se": {
-                    "cover": "images/se/medvetandets-trd.webp",
-                    "excerpt": "books/se/dyrvoto-na-syznanieto.md",
-                    "genre": "Thriller",
-                    "synopsis": "synopsis/se/dyrvoto-na-syznanieto.txt",
-                    "title": "Medvetandets träd"
-                }
-            },
-            "id": "dyrvoto-na-syznanieto",
-            "links": [
-                {
-                    "lang": "EN",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.com/dp/B0FVZ6GCJV"
-                },
-                {
-                    "lang": "DE",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.de/dp/B0G2DZK7XP"
-                },
-                {
-                    "lang": "IT",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.it/dp/B0G2F79CPV"
-                },
-                {
-                    "lang": "FR",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.fr/dp/B0FWBD9MQ6"
-                },
-                {
-                    "lang": "SE",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.com/dp/B0G5FC6PVH"
-                },
-                {
-                    "lang": "NL",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.nl/dp/B0G5K5CDFB"
-                },
-                {
-                    "lang": "NL",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/bwpLqa"
-                },
-                {
-                    "lang": "EN",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/bpJEyk"
-                },
-                {
-                    "lang": "DE",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/4jV0K5"
-                },
-                {
-                    "lang": "IT",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/meENLY"
-                },
-                {
-                    "lang": "FR",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/bwJaMY"
-                },
-                {
-                    "lang": "SE",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/3LzP9M"
-                },
-                {
-                    "lang": "ES",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.es/dp/B0G5DJ7PNZ"
-                },
-                {
-                    "lang": "ES",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/49BA68"
-                },
-                {
-                    "lang": "PT",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.es/dp/B0G5L5KJPP"
-                },
-                {
-                    "lang": "PT",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/mvDPZX"
-                }
-            ]
-        },
-        {
-            "i18n": {
                 "de": {
                     "cover": "images/de/Die_Tuzo-Anomalie_-_DE-EL.webp",
                     "excerpt": "books/de/the-tuzo-anomaly.md",
@@ -449,137 +299,292 @@ const authorData = {
             ]
         },
         {
-            "id": "gnostichnia-shifar",
             "i18n": {
                 "bg": {
-                    "title": "Гностичният Шифър",
-                    "genre": "Исторически Техно-трилър, Конспиративен трилър",
                     "cover": "images/bg/Cover-gnostichnia-shifar-_bg.webp",
+                    "excerpt": "books/bg/gnostichnia-shifar.md",
+                    "genre": "Исторически Техно-трилър, Конспиративен трилър",
                     "synopsis": "synopsis/bg/gnostichnia-shifar.txt",
-                    "excerpt": "books/bg/gnostichnia-shifar.md"
-                },
-                "en": {
-                    "title": "The Gnostic Cipher",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "cover": "images/en/the-gnostic-cipher.webp",
-                    "synopsis": "synopsis/en/gnostichnia-shifar.txt",
-                    "excerpt": "books/en/gnostichnia-shifar.md"
+                    "title": "Гностичният Шифър"
                 },
                 "de": {
-                    "title": "Die Gnostische Chiffre",
-                    "genre": "Techno-Thriller, Verschwörungsthriller",
                     "cover": "images/de/die-gnostische-chiffre.webp",
+                    "excerpt": "books/de/gnostichnia-shifar.md",
+                    "genre": "Techno-Thriller, Verschwörungsthriller",
                     "synopsis": "synopsis/de/gnostichnia-shifar.txt",
-                    "excerpt": "books/de/gnostichnia-shifar.md"
+                    "title": "Die Gnostische Chiffre"
                 },
-                "fr": {
-                    "title": "Le Chiffre Gnostique",
-                    "genre": "Techno-thriller, Thriller conspirationniste",
-                    "cover": "images/fr/le-chiffre-gnostique.webp",
-                    "synopsis": "synopsis/fr/gnostichnia-shifar.txt",
-                    "excerpt": "books/fr/gnostichnia-shifar.md"
-                },
-                "it": {
-                    "title": "Il Codice Gnostico",
-                    "genre": "Techno-thriller, Thriller cospirativo",
-                    "cover": "images/it/il-codice-gnostico.webp",
-                    "synopsis": "synopsis/it/gnostichnia-shifar.txt",
-                    "excerpt": "books/it/gnostichnia-shifar.md"
-                },
-                "nl": {
-                    "title": "De Gnostische Code",
+                "en": {
+                    "cover": "images/en/the-gnostic-cipher.webp",
+                    "excerpt": "books/en/gnostichnia-shifar.md",
                     "genre": "Techno-Thriller, Global Conspiracy",
-                    "cover": "images/nl/Cover-De_Gnostische_Code_-el-_NL.webp",
-                    "synopsis": "synopsis/nl/gnostichnia-shifar.txt",
-                    "excerpt": "books/nl/gnostichnia-shifar.md"
+                    "synopsis": "synopsis/en/gnostichnia-shifar.txt",
+                    "title": "The Gnostic Cipher"
                 },
                 "es": {
-                    "title": "El Código Gnóstico",
-                    "genre": "Techno-Thriller, Global Conspiracy",
                     "cover": "images/es/Cover-El_Codigo_Gnostico_-el-_ES.webp",
+                    "excerpt": "books/es/gnostichnia-shifar.md",
+                    "genre": "Techno-Thriller, Global Conspiracy",
                     "synopsis": "synopsis/es/gnostichnia-shifar.txt",
-                    "excerpt": "books/es/gnostichnia-shifar.md"
+                    "title": "El Código Gnóstico"
+                },
+                "fr": {
+                    "cover": "images/fr/le-chiffre-gnostique.webp",
+                    "excerpt": "books/fr/gnostichnia-shifar.md",
+                    "genre": "Techno-thriller, Thriller conspirationniste",
+                    "synopsis": "synopsis/fr/gnostichnia-shifar.txt",
+                    "title": "Le Chiffre Gnostique"
+                },
+                "it": {
+                    "cover": "images/it/il-codice-gnostico.webp",
+                    "excerpt": "books/it/gnostichnia-shifar.md",
+                    "genre": "Techno-thriller, Thriller cospirativo",
+                    "synopsis": "synopsis/it/gnostichnia-shifar.txt",
+                    "title": "Il Codice Gnostico"
+                },
+                "nl": {
+                    "cover": "images/nl/Cover-De_Gnostische_Code_-el-_NL.webp",
+                    "excerpt": "books/nl/gnostichnia-shifar.md",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "synopsis": "synopsis/nl/gnostichnia-shifar.txt",
+                    "title": "De Gnostische Code"
                 },
                 "pt": {
-                    "title": "O Código Gnóstico",
-                    "genre": "Techno-Thriller, Global Conspiracy",
                     "cover": "images/pt/Cover-O_Codigo_Gnostico_-el-_PT.webp",
+                    "excerpt": "books/pt/gnostichnia-shifar.md",
+                    "genre": "Techno-Thriller, Global Conspiracy",
                     "synopsis": "synopsis/pt/gnostichnia-shifar.txt",
-                    "excerpt": "books/pt/gnostichnia-shifar.md"
+                    "title": "O Código Gnóstico"
                 },
                 "se": {
-                    "title": "Den Gnostiska koden",
-                    "genre": "Techno-Thriller, Global Conspiracy",
                     "cover": "images/se/den-gnostiska-koden.webp",
+                    "excerpt": "books/se/gnostichnia-shifar.md",
+                    "genre": "Techno-Thriller, Global Conspiracy",
                     "synopsis": "synopsis/se/gnostichnia-shifar.txt",
-                    "excerpt": "books/se/gnostichnia-shifar.md"
+                    "title": "Den Gnostiska koden"
+                }
+            },
+            "id": "gnostichnia-shifar",
+            "links": [
+                {
+                    "lang": "EN",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.com/dp/B0FXVWT2LV"
+                },
+                {
+                    "lang": "DE",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.de/dp/B0G5QTNHJ2"
+                },
+                {
+                    "lang": "IT",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.it/dp/B0G64C5L92"
+                },
+                {
+                    "lang": "FR",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.fr/dp/B0G6789BXV"
+                },
+                {
+                    "lang": "SE",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.com/dp/B0G6D42JBD"
+                },
+                {
+                    "lang": "NL",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.nl/dp/B0G82Y59S7"
+                },
+                {
+                    "lang": "NL",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/3nlDAo"
+                },
+                {
+                    "lang": "ES",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.es/dp/B0G7ZWMZ18"
+                },
+                {
+                    "lang": "ES",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/m2GQyk"
+                },
+                {
+                    "lang": "PT",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.es/dp/B0G8423D25"
+                },
+                {
+                    "lang": "PT",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/bplyo6"
+                },
+                {
+                    "lang": "SE",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/mvDOvV"
+                },
+                {
+                    "lang": "BG",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/boG6xZ"
+                }
+            ]
+        },
+        {
+            "id": "dyrvoto-na-syznanieto",
+            "i18n": {
+                "bg": {
+                    "title": "Дървото на съзнанието",
+                    "genre": "Трилър, Конспиративен трилър",
+                    "cover": "images/bg/Cover-dyrvoto-na-syznanieto-BG.webp",
+                    "synopsis": "synopsis/bg/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/bg/dyrvoto-na-syznanieto.md"
+                },
+                "en": {
+                    "title": "The Tree of Consciousness",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/en/the-tree-of-consciousness.webp",
+                    "synopsis": "synopsis/en/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/en/dyrvoto-na-syznanieto.md"
+                },
+                "de": {
+                    "title": "Der Baum des Bewusstseins",
+                    "genre": "Techno-Thriller, Verschwörungsthriller",
+                    "cover": "images/de/der-baum-des-bewusstseins.webp",
+                    "synopsis": "synopsis/de/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/de/dyrvoto-na-syznanieto.md"
+                },
+                "fr": {
+                    "title": "L'Arbre de la Conscience",
+                    "genre": "Techno-thriller, Thriller conspirationniste",
+                    "cover": "images/fr/larbre-de-la-conscience.webp",
+                    "synopsis": "synopsis/fr/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/fr/dyrvoto-na-syznanieto.md"
+                },
+                "it": {
+                    "title": "L'Albero della Coscienza",
+                    "genre": "Techno-thriller, Thriller cospirativo",
+                    "cover": "images/it/lalbero-della-coscienza.webp",
+                    "synopsis": "synopsis/it/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/it/dyrvoto-na-syznanieto.md"
+                },
+                "nl": {
+                    "title": "De Boom van het Bewustzijn",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/nl/Cover-De_Boom_van_het_Bewustzijn-EL-NL.webp",
+                    "synopsis": "synopsis/nl/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/nl/dyrvoto-na-syznanieto.md"
+                },
+                "es": {
+                    "title": "El Árbol de la Conciencia",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/es/Cover-El_Arbol_de_la_Conciencia-EL-ES.webp",
+                    "synopsis": "synopsis/es/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/es/dyrvoto-na-syznanieto.md"
+                },
+                "pt": {
+                    "title": "A Árvore da Consciência",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/pt/Cover-A_Arvore_da_Consciencia-EL-PT.webp",
+                    "synopsis": "synopsis/pt/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/pt/dyrvoto-na-syznanieto.md"
+                },
+                "se": {
+                    "title": "Medvetandets träd",
+                    "genre": "Thriller",
+                    "cover": "images/se/medvetandets-trd.webp",
+                    "synopsis": "synopsis/se/dyrvoto-na-syznanieto.txt",
+                    "excerpt": "books/se/dyrvoto-na-syznanieto.md"
                 }
             },
             "links": [
                 {
                     "platform": "Amazon",
                     "lang": "EN",
-                    "url": "https://www.amazon.com/dp/B0FXVWT2LV"
+                    "url": "https://www.amazon.com/dp/B0FVZ6GCJV"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "DE",
-                    "url": "https://www.amazon.de/dp/B0G5QTNHJ2"
+                    "url": "https://www.amazon.de/dp/B0G2DZK7XP"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "IT",
-                    "url": "https://www.amazon.it/dp/B0G64C5L92"
+                    "url": "https://www.amazon.it/dp/B0G2F79CPV"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "FR",
-                    "url": "https://www.amazon.fr/dp/B0G6789BXV"
+                    "url": "https://www.amazon.fr/dp/B0FWBD9MQ6"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "SE",
-                    "url": "https://www.amazon.com/dp/B0G6D42JBD"
+                    "url": "https://www.amazon.com/dp/B0G5FC6PVH"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "NL",
-                    "url": "https://www.amazon.nl/dp/B0G82Y59S7"
+                    "url": "https://www.amazon.nl/dp/B0G5K5CDFB"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "NL",
-                    "url": "https://books2read.com/u/3nlDAo"
-                },
-                {
-                    "platform": "Amazon",
-                    "lang": "ES",
-                    "url": "https://www.amazon.es/dp/B0G7ZWMZ18"
+                    "url": "https://books2read.com/u/bwpLqa"
                 },
                 {
                     "platform": "Draft2Digital",
-                    "lang": "ES",
-                    "url": "https://books2read.com/u/m2GQyk"
-                },
-                {
-                    "platform": "Amazon",
-                    "lang": "PT",
-                    "url": "https://www.amazon.es/dp/B0G8423D25"
+                    "lang": "EN",
+                    "url": "https://books2read.com/u/bpJEyk"
                 },
                 {
                     "platform": "Draft2Digital",
-                    "lang": "PT",
-                    "url": "https://books2read.com/u/bplyo6"
+                    "lang": "DE",
+                    "url": "https://books2read.com/u/4jV0K5"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "IT",
+                    "url": "https://books2read.com/u/meENLY"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "FR",
+                    "url": "https://books2read.com/u/bwJaMY"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "SE",
-                    "url": "https://books2read.com/u/mvDOvV"
+                    "url": "https://books2read.com/u/3LzP9M"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "ES",
+                    "url": "https://www.amazon.es/dp/B0G5DJ7PNZ"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "ES",
+                    "url": "https://books2read.com/u/49BA68"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "PT",
+                    "url": "https://www.amazon.es/dp/B0G5L5KJPP"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "PT",
+                    "url": "https://books2read.com/u/mvDPZX"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "BG",
-                    "url": "https://books2read.com/u/boG6xZ"
+                    "url": "https://books2read.com/u/49zxgW"
                 }
             ]
         }
