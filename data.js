@@ -19,144 +19,6 @@ const authorData = {
     "novels": [
         {
             "i18n": {
-                "de": {
-                    "cover": "images/de/Die_Tuzo-Anomalie_-_DE-EL.webp",
-                    "excerpt": "books/de/the-tuzo-anomaly.md",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "synopsis": "synopsis/de/the-tuzo-anomaly.txt",
-                    "title": "Die Tuzo-Anomalie"
-                },
-                "en": {
-                    "cover": "images/en/the-tuzo-anomaly.webp",
-                    "excerpt": "books/en/the-tuzo-anomaly.md",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "synopsis": "synopsis/en/the-tuzo-anomaly.txt",
-                    "title": "The Tuzo Anomaly"
-                },
-                "es": {
-                    "cover": "images/es/La_Anomalia_Tuzo_-_ES-EL.webp",
-                    "excerpt": "books/es/the-tuzo-anomaly.md",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "synopsis": "synopsis/es/the-tuzo-anomaly.txt",
-                    "title": "La Anomalía Tuzo"
-                },
-                "fr": {
-                    "cover": "images/fr/LANOMALIE_DE_TUZO_-_FR-EL.webp",
-                    "excerpt": "books/fr/the-tuzo-anomaly.md",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "synopsis": "synopsis/fr/the-tuzo-anomaly.txt",
-                    "title": "L’Anomalie de Tuzo"
-                },
-                "it": {
-                    "cover": "images/it/LAnomalia_Tuzo_-_IT-EL.webp",
-                    "excerpt": "books/it/the-tuzo-anomaly.md",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "synopsis": "synopsis/it/the-tuzo-anomaly.txt",
-                    "title": "L'Anomalia Tuzo"
-                },
-                "nl": {
-                    "cover": "images/nl/De_Tuzo-anomalie_-_NL-EL.webp",
-                    "excerpt": "books/nl/the-tuzo-anomaly.md",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "synopsis": "synopsis/nl/the-tuzo-anomaly.txt",
-                    "title": "De Tuzo-anomalie"
-                },
-                "pt": {
-                    "cover": "images/pt/A_Anomalia_Tuzo_-_PT-EL.webp",
-                    "excerpt": "books/pt/the-tuzo-anomaly.md",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "synopsis": "synopsis/pt/the-tuzo-anomaly.txt",
-                    "title": "A Anomalia Tuzo"
-                },
-                "se": {
-                    "cover": "images/se/Tuzo-anomalin_-_SE-EL.webp",
-                    "excerpt": "books/se/the-tuzo-anomaly.md",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "synopsis": "synopsis/se/the-tuzo-anomaly.txt",
-                    "title": "Tuzo-anomalin"
-                }
-            },
-            "id": "the-tuzo-anomaly",
-            "links": [
-                {
-                    "lang": "EN",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.com/dp/B0GR9RZYDB"
-                },
-                {
-                    "lang": "DE",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.de/dp/B0GRN64P2G"
-                },
-                {
-                    "lang": "DE",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/3Jdv2g"
-                },
-                {
-                    "lang": "FR",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.fr/dp/B0GRR9R386"
-                },
-                {
-                    "lang": "FR",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/mYwJ7Y"
-                },
-                {
-                    "lang": "IT",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.it/dp/B0GGZM4HGM"
-                },
-                {
-                    "lang": "IT",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/mgQJoR"
-                },
-                {
-                    "lang": "NL",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.nl/dp/B0GS2C225K"
-                },
-                {
-                    "lang": "NL",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/bWDMk1"
-                },
-                {
-                    "lang": "ES",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.es/dp/B0GRVKVWNQ"
-                },
-                {
-                    "lang": "ES",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/bxLdwJ"
-                },
-                {
-                    "lang": "PT",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.es/dp/B0GSC3H9DC"
-                },
-                {
-                    "lang": "PT",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/bWDNX1"
-                },
-                {
-                    "lang": "SE",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.com/dp/B0GRSQ373C"
-                },
-                {
-                    "lang": "SE",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/mqdJoZ"
-                }
-            ]
-        },
-        {
-            "i18n": {
                 "bg": {
                     "cover": "images/bg/Cover-gnostichnia-shifar-_bg.webp",
                     "excerpt": "books/bg/gnostichnia-shifar.md",
@@ -446,157 +308,307 @@ const authorData = {
             ]
         },
         {
-            "id": "the-seed-of-eden",
             "i18n": {
                 "bg": {
-                    "title": "Семето на Едем",
-                    "genre": "Исторически Техно-трилър, Конспиративен трилър",
                     "cover": "images/bg/SEmeto-na-edem-bg.webp",
+                    "excerpt": "books/bg/the-seed-of-eden.md",
+                    "genre": "Исторически Техно-трилър, Конспиративен трилър",
                     "synopsis": "synopsis/bg/the-seed-of-eden.txt",
-                    "excerpt": "books/bg/the-seed-of-eden.md"
-                },
-                "en": {
-                    "title": "The Seed of Eden",
-                    "genre": "Sci-fi conspiracy thriller",
-                    "cover": "images/en/The_Seed_of_Eden.webp",
-                    "synopsis": "synopsis/en/the-seed-of-eden.txt",
-                    "excerpt": "books/en/the-seed-of-eden.md"
+                    "title": "Семето на Едем"
                 },
                 "de": {
-                    "title": "Der Samen von Eden",
-                    "genre": "Sci-fi conspiracy thriller",
                     "cover": "images/de/DER-SAMEN-VON-EDEN-DE.webp",
+                    "excerpt": "books/de/the-seed-of-eden.md",
+                    "genre": "Sci-fi conspiracy thriller",
                     "synopsis": "synopsis/de/the-seed-of-eden.txt",
-                    "excerpt": "books/de/the-seed-of-eden.md"
+                    "title": "Der Samen von Eden"
                 },
-                "fr": {
-                    "title": "La Graine d'Éden",
+                "en": {
+                    "cover": "images/en/The_Seed_of_Eden.webp",
+                    "excerpt": "books/en/the-seed-of-eden.md",
                     "genre": "Sci-fi conspiracy thriller",
-                    "cover": "images/fr/La_Graine_dEden-FR.webp",
-                    "synopsis": "synopsis/fr/the-seed-of-eden.txt",
-                    "excerpt": "books/fr/the-seed-of-eden.md"
-                },
-                "it": {
-                    "title": "Il Seme dell'Eden",
-                    "genre": "Sci-fi conspiracy thriller",
-                    "cover": "images/it/IL_SEME_DELLEDEN-IT.webp",
-                    "synopsis": "synopsis/it/the-seed-of-eden.txt",
-                    "excerpt": "books/it/the-seed-of-eden.md"
-                },
-                "nl": {
-                    "title": "Het Zaad van Eden",
-                    "genre": "Sci-fi conspiracy thriller",
-                    "cover": "images/nl/Het_Zaad_van_Eden-NL.webp",
-                    "synopsis": "synopsis/nl/the-seed-of-eden.txt",
-                    "excerpt": "books/nl/the-seed-of-eden.md"
+                    "synopsis": "synopsis/en/the-seed-of-eden.txt",
+                    "title": "The Seed of Eden"
                 },
                 "es": {
-                    "title": "La Semilla del Edén",
-                    "genre": "Sci-fi conspiracy thriller",
                     "cover": "images/es/La_semilla_del_Eden-ES.webp",
+                    "excerpt": "books/es/the-seed-of-eden.md",
+                    "genre": "Sci-fi conspiracy thriller",
                     "synopsis": "synopsis/es/the-seed-of-eden.txt",
-                    "excerpt": "books/es/the-seed-of-eden.md"
+                    "title": "La Semilla del Edén"
+                },
+                "fr": {
+                    "cover": "images/fr/La_Graine_dEden-FR.webp",
+                    "excerpt": "books/fr/the-seed-of-eden.md",
+                    "genre": "Sci-fi conspiracy thriller",
+                    "synopsis": "synopsis/fr/the-seed-of-eden.txt",
+                    "title": "La Graine d'Éden"
+                },
+                "it": {
+                    "cover": "images/it/IL_SEME_DELLEDEN-IT.webp",
+                    "excerpt": "books/it/the-seed-of-eden.md",
+                    "genre": "Sci-fi conspiracy thriller",
+                    "synopsis": "synopsis/it/the-seed-of-eden.txt",
+                    "title": "Il Seme dell'Eden"
+                },
+                "nl": {
+                    "cover": "images/nl/Het_Zaad_van_Eden-NL.webp",
+                    "excerpt": "books/nl/the-seed-of-eden.md",
+                    "genre": "Sci-fi conspiracy thriller",
+                    "synopsis": "synopsis/nl/the-seed-of-eden.txt",
+                    "title": "Het Zaad van Eden"
                 },
                 "pt": {
-                    "title": "A Semente do Éden",
-                    "genre": "Sci-fi conspiracy thriller",
                     "cover": "images/pt/A_Semente_do_Eden-PT.webp",
+                    "excerpt": "books/pt/the-seed-of-eden.md",
+                    "genre": "Sci-fi conspiracy thriller",
                     "synopsis": "synopsis/pt/the-seed-of-eden.txt",
-                    "excerpt": "books/pt/the-seed-of-eden.md"
+                    "title": "A Semente do Éden"
                 },
                 "se": {
-                    "title": "Edens frö",
-                    "genre": "Sci-fi conspiracy thriller",
                     "cover": "images/se/Edens_fro-SE.webp",
+                    "excerpt": "books/se/the-seed-of-eden.md",
+                    "genre": "Sci-fi conspiracy thriller",
                     "synopsis": "synopsis/se/the-seed-of-eden.txt",
-                    "excerpt": "books/se/the-seed-of-eden.md"
+                    "title": "Edens frö"
+                }
+            },
+            "id": "the-seed-of-eden",
+            "links": [
+                {
+                    "lang": "DE",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.de/dp/B0GMYB3H54"
+                },
+                {
+                    "lang": "DE",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/3yAdoe"
+                },
+                {
+                    "lang": "FR",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.fr/dp/B0GN58WGF4"
+                },
+                {
+                    "lang": "FR",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/4DM81r"
+                },
+                {
+                    "lang": "EN",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.com/dp/B0GMD91NWJ"
+                },
+                {
+                    "lang": "EN",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/479YdN"
+                },
+                {
+                    "lang": "IT",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.it/dp/B0GN5JSNZB"
+                },
+                {
+                    "lang": "IT",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/4Nzg6N"
+                },
+                {
+                    "lang": "NL",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.nl/dp/B0GNHBFYF6"
+                },
+                {
+                    "lang": "NL",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/4jkBVj"
+                },
+                {
+                    "lang": "ES",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.es/dp/B0GNFTZH3P"
+                },
+                {
+                    "lang": "ES",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/bPPeVl"
+                },
+                {
+                    "lang": "PT",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.es/dp/B0GNXJDVYM"
+                },
+                {
+                    "lang": "PT",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/bwPVLv"
+                },
+                {
+                    "lang": "SE",
+                    "platform": "Amazon",
+                    "url": "https://www.amazon.com/dp/B0GNKBLHBX"
+                },
+                {
+                    "lang": "SE",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/3n0Gje"
+                },
+                {
+                    "lang": "BG",
+                    "platform": "Draft2Digital",
+                    "url": "https://books2read.com/u/bWVKMx"
+                }
+            ]
+        },
+        {
+            "id": "the-tuzo-anomaly",
+            "i18n": {
+                "bg": {
+                    "title": "Аномалията Тузо",
+                    "genre": "Техно-трилър, Гео-трилър",
+                    "cover": "images/bg/Anomaliata-Tuzo-BG.webp",
+                    "synopsis": "synopsis/bg/the-tuzo-anomaly.txt",
+                    "excerpt": "books/bg/the-tuzo-anomaly.md"
+                },
+                "en": {
+                    "title": "The Tuzo Anomaly",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "cover": "images/en/the-tuzo-anomaly.webp",
+                    "synopsis": "synopsis/en/the-tuzo-anomaly.txt",
+                    "excerpt": "books/en/the-tuzo-anomaly.md"
+                },
+                "de": {
+                    "title": "Die Tuzo-Anomalie",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "cover": "images/de/Die_Tuzo-Anomalie_-_DE-EL.webp",
+                    "synopsis": "synopsis/de/the-tuzo-anomaly.txt",
+                    "excerpt": "books/de/the-tuzo-anomaly.md"
+                },
+                "fr": {
+                    "title": "L’Anomalie de Tuzo",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "cover": "images/fr/LANOMALIE_DE_TUZO_-_FR-EL.webp",
+                    "synopsis": "synopsis/fr/the-tuzo-anomaly.txt",
+                    "excerpt": "books/fr/the-tuzo-anomaly.md"
+                },
+                "it": {
+                    "title": "L'Anomalia Tuzo",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "cover": "images/it/LAnomalia_Tuzo_-_IT-EL.webp",
+                    "synopsis": "synopsis/it/the-tuzo-anomaly.txt",
+                    "excerpt": "books/it/the-tuzo-anomaly.md"
+                },
+                "nl": {
+                    "title": "De Tuzo-anomalie",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "cover": "images/nl/De_Tuzo-anomalie_-_NL-EL.webp",
+                    "synopsis": "synopsis/nl/the-tuzo-anomaly.txt",
+                    "excerpt": "books/nl/the-tuzo-anomaly.md"
+                },
+                "es": {
+                    "title": "La Anomalía Tuzo",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "cover": "images/es/La_Anomalia_Tuzo_-_ES-EL.webp",
+                    "synopsis": "synopsis/es/the-tuzo-anomaly.txt",
+                    "excerpt": "books/es/the-tuzo-anomaly.md"
+                },
+                "pt": {
+                    "title": "A Anomalia Tuzo",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "cover": "images/pt/A_Anomalia_Tuzo_-_PT-EL.webp",
+                    "synopsis": "synopsis/pt/the-tuzo-anomaly.txt",
+                    "excerpt": "books/pt/the-tuzo-anomaly.md"
+                },
+                "se": {
+                    "title": "Tuzo-anomalin",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "cover": "images/se/Tuzo-anomalin_-_SE-EL.webp",
+                    "synopsis": "synopsis/se/the-tuzo-anomaly.txt",
+                    "excerpt": "books/se/the-tuzo-anomaly.md"
                 }
             },
             "links": [
                 {
                     "platform": "Amazon",
+                    "lang": "EN",
+                    "url": "https://www.amazon.com/dp/B0GR9RZYDB"
+                },
+                {
+                    "platform": "Amazon",
                     "lang": "DE",
-                    "url": "https://www.amazon.de/dp/B0GMYB3H54"
+                    "url": "https://www.amazon.de/dp/B0GRN64P2G"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "DE",
-                    "url": "https://books2read.com/u/3yAdoe"
+                    "url": "https://books2read.com/u/3Jdv2g"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "FR",
-                    "url": "https://www.amazon.fr/dp/B0GN58WGF4"
+                    "url": "https://www.amazon.fr/dp/B0GRR9R386"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "FR",
-                    "url": "https://books2read.com/u/4DM81r"
-                },
-                {
-                    "platform": "Amazon",
-                    "lang": "EN",
-                    "url": "https://www.amazon.com/dp/B0GMD91NWJ"
-                },
-                {
-                    "platform": "Draft2Digital",
-                    "lang": "EN",
-                    "url": "https://books2read.com/u/479YdN"
+                    "url": "https://books2read.com/u/mYwJ7Y"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "IT",
-                    "url": "https://www.amazon.it/dp/B0GN5JSNZB"
+                    "url": "https://www.amazon.it/dp/B0GGZM4HGM"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "IT",
-                    "url": "https://books2read.com/u/4Nzg6N"
+                    "url": "https://books2read.com/u/mgQJoR"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "NL",
-                    "url": "https://www.amazon.nl/dp/B0GNHBFYF6"
+                    "url": "https://www.amazon.nl/dp/B0GS2C225K"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "NL",
-                    "url": "https://books2read.com/u/4jkBVj"
+                    "url": "https://books2read.com/u/bWDMk1"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "ES",
-                    "url": "https://www.amazon.es/dp/B0GNFTZH3P"
+                    "url": "https://www.amazon.es/dp/B0GRVKVWNQ"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "ES",
-                    "url": "https://books2read.com/u/bPPeVl"
+                    "url": "https://books2read.com/u/bxLdwJ"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "PT",
-                    "url": "https://www.amazon.es/dp/B0GNXJDVYM"
+                    "url": "https://www.amazon.es/dp/B0GSC3H9DC"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "PT",
-                    "url": "https://books2read.com/u/bwPVLv"
+                    "url": "https://books2read.com/u/bWDNX1"
                 },
                 {
                     "platform": "Amazon",
                     "lang": "SE",
-                    "url": "https://www.amazon.com/dp/B0GNKBLHBX"
+                    "url": "https://www.amazon.com/dp/B0GRSQ373C"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "SE",
-                    "url": "https://books2read.com/u/3n0Gje"
+                    "url": "https://books2read.com/u/mqdJoZ"
                 },
                 {
                     "platform": "Draft2Digital",
                     "lang": "BG",
-                    "url": "https://books2read.com/u/bWVKMx"
+                    "url": "https://books2read.com/u/3kErGO"
                 }
             ]
         }
