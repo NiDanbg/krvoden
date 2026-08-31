@@ -1,7 +1,7 @@
 const authorData = {
     "featured": [
         "the-tuzo-anomaly",
-        "the-seed-of-eden"
+        "square-knot"
     ],
     "meta": {
         "bg": {
@@ -463,156 +463,200 @@ const authorData = {
             ]
         },
         {
-            "id": "the-tuzo-anomaly",
             "i18n": {
                 "bg": {
-                    "title": "Аномалията Тузо",
-                    "genre": "Техно-трилър, Гео-трилър",
                     "cover": "images/bg/Anomaliata-Tuzo-BG.webp",
+                    "excerpt": "books/bg/the-tuzo-anomaly.md",
+                    "genre": "Техно-трилър, Гео-трилър",
                     "synopsis": "synopsis/bg/the-tuzo-anomaly.txt",
-                    "excerpt": "books/bg/the-tuzo-anomaly.md"
-                },
-                "en": {
-                    "title": "The Tuzo Anomaly",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "cover": "images/en/the-tuzo-anomaly.webp",
-                    "synopsis": "synopsis/en/the-tuzo-anomaly.txt",
-                    "excerpt": "books/en/the-tuzo-anomaly.md"
+                    "title": "Аномалията Тузо"
                 },
                 "de": {
-                    "title": "Die Tuzo-Anomalie",
-                    "genre": "A Techno-Apocalyptic Thriller",
                     "cover": "images/de/Die_Tuzo-Anomalie_-_DE-EL.webp",
+                    "excerpt": "books/de/the-tuzo-anomaly.md",
+                    "genre": "A Techno-Apocalyptic Thriller",
                     "synopsis": "synopsis/de/the-tuzo-anomaly.txt",
-                    "excerpt": "books/de/the-tuzo-anomaly.md"
+                    "title": "Die Tuzo-Anomalie"
                 },
-                "fr": {
-                    "title": "L’Anomalie de Tuzo",
+                "en": {
+                    "cover": "images/en/the-tuzo-anomaly.webp",
+                    "excerpt": "books/en/the-tuzo-anomaly.md",
                     "genre": "A Techno-Apocalyptic Thriller",
-                    "cover": "images/fr/LANOMALIE_DE_TUZO_-_FR-EL.webp",
-                    "synopsis": "synopsis/fr/the-tuzo-anomaly.txt",
-                    "excerpt": "books/fr/the-tuzo-anomaly.md"
-                },
-                "it": {
-                    "title": "L'Anomalia Tuzo",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "cover": "images/it/LAnomalia_Tuzo_-_IT-EL.webp",
-                    "synopsis": "synopsis/it/the-tuzo-anomaly.txt",
-                    "excerpt": "books/it/the-tuzo-anomaly.md"
-                },
-                "nl": {
-                    "title": "De Tuzo-anomalie",
-                    "genre": "A Techno-Apocalyptic Thriller",
-                    "cover": "images/nl/De_Tuzo-anomalie_-_NL-EL.webp",
-                    "synopsis": "synopsis/nl/the-tuzo-anomaly.txt",
-                    "excerpt": "books/nl/the-tuzo-anomaly.md"
+                    "synopsis": "synopsis/en/the-tuzo-anomaly.txt",
+                    "title": "The Tuzo Anomaly"
                 },
                 "es": {
-                    "title": "La Anomalía Tuzo",
-                    "genre": "A Techno-Apocalyptic Thriller",
                     "cover": "images/es/La_Anomalia_Tuzo_-_ES-EL.webp",
+                    "excerpt": "books/es/the-tuzo-anomaly.md",
+                    "genre": "A Techno-Apocalyptic Thriller",
                     "synopsis": "synopsis/es/the-tuzo-anomaly.txt",
-                    "excerpt": "books/es/the-tuzo-anomaly.md"
+                    "title": "La Anomalía Tuzo"
+                },
+                "fr": {
+                    "cover": "images/fr/LANOMALIE_DE_TUZO_-_FR-EL.webp",
+                    "excerpt": "books/fr/the-tuzo-anomaly.md",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "synopsis": "synopsis/fr/the-tuzo-anomaly.txt",
+                    "title": "L’Anomalie de Tuzo"
+                },
+                "it": {
+                    "cover": "images/it/LAnomalia_Tuzo_-_IT-EL.webp",
+                    "excerpt": "books/it/the-tuzo-anomaly.md",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "synopsis": "synopsis/it/the-tuzo-anomaly.txt",
+                    "title": "L'Anomalia Tuzo"
+                },
+                "nl": {
+                    "cover": "images/nl/De_Tuzo-anomalie_-_NL-EL.webp",
+                    "excerpt": "books/nl/the-tuzo-anomaly.md",
+                    "genre": "A Techno-Apocalyptic Thriller",
+                    "synopsis": "synopsis/nl/the-tuzo-anomaly.txt",
+                    "title": "De Tuzo-anomalie"
                 },
                 "pt": {
-                    "title": "A Anomalia Tuzo",
-                    "genre": "A Techno-Apocalyptic Thriller",
                     "cover": "images/pt/A_Anomalia_Tuzo_-_PT-EL.webp",
+                    "excerpt": "books/pt/the-tuzo-anomaly.md",
+                    "genre": "A Techno-Apocalyptic Thriller",
                     "synopsis": "synopsis/pt/the-tuzo-anomaly.txt",
-                    "excerpt": "books/pt/the-tuzo-anomaly.md"
+                    "title": "A Anomalia Tuzo"
                 },
                 "se": {
-                    "title": "Tuzo-anomalin",
-                    "genre": "A Techno-Apocalyptic Thriller",
                     "cover": "images/se/Tuzo-anomalin_-_SE-EL.webp",
+                    "excerpt": "books/se/the-tuzo-anomaly.md",
+                    "genre": "A Techno-Apocalyptic Thriller",
                     "synopsis": "synopsis/se/the-tuzo-anomaly.txt",
-                    "excerpt": "books/se/the-tuzo-anomaly.md"
+                    "title": "Tuzo-anomalin"
                 }
             },
+            "id": "the-tuzo-anomaly",
             "links": [
                 {
-                    "platform": "Amazon",
                     "lang": "EN",
+                    "platform": "Amazon",
                     "url": "https://www.amazon.com/dp/B0GR9RZYDB"
                 },
                 {
-                    "platform": "Amazon",
                     "lang": "DE",
+                    "platform": "Amazon",
                     "url": "https://www.amazon.de/dp/B0GRN64P2G"
                 },
                 {
-                    "platform": "Draft2Digital",
                     "lang": "DE",
+                    "platform": "Draft2Digital",
                     "url": "https://books2read.com/u/3Jdv2g"
                 },
                 {
-                    "platform": "Amazon",
                     "lang": "FR",
+                    "platform": "Amazon",
                     "url": "https://www.amazon.fr/dp/B0GRR9R386"
                 },
                 {
-                    "platform": "Draft2Digital",
                     "lang": "FR",
+                    "platform": "Draft2Digital",
                     "url": "https://books2read.com/u/mYwJ7Y"
                 },
                 {
-                    "platform": "Amazon",
                     "lang": "IT",
+                    "platform": "Amazon",
                     "url": "https://www.amazon.it/dp/B0GGZM4HGM"
                 },
                 {
-                    "platform": "Draft2Digital",
                     "lang": "IT",
+                    "platform": "Draft2Digital",
                     "url": "https://books2read.com/u/mgQJoR"
                 },
                 {
-                    "platform": "Amazon",
                     "lang": "NL",
+                    "platform": "Amazon",
                     "url": "https://www.amazon.nl/dp/B0GS2C225K"
                 },
                 {
-                    "platform": "Draft2Digital",
                     "lang": "NL",
+                    "platform": "Draft2Digital",
                     "url": "https://books2read.com/u/bWDMk1"
                 },
                 {
-                    "platform": "Amazon",
                     "lang": "ES",
+                    "platform": "Amazon",
                     "url": "https://www.amazon.es/dp/B0GRVKVWNQ"
                 },
                 {
-                    "platform": "Draft2Digital",
                     "lang": "ES",
+                    "platform": "Draft2Digital",
                     "url": "https://books2read.com/u/bxLdwJ"
                 },
                 {
-                    "platform": "Amazon",
                     "lang": "PT",
+                    "platform": "Amazon",
                     "url": "https://www.amazon.es/dp/B0GSC3H9DC"
                 },
                 {
-                    "platform": "Draft2Digital",
                     "lang": "PT",
+                    "platform": "Draft2Digital",
                     "url": "https://books2read.com/u/bWDNX1"
                 },
                 {
-                    "platform": "Amazon",
                     "lang": "SE",
+                    "platform": "Amazon",
                     "url": "https://www.amazon.com/dp/B0GRSQ373C"
                 },
                 {
-                    "platform": "Draft2Digital",
                     "lang": "SE",
+                    "platform": "Draft2Digital",
                     "url": "https://books2read.com/u/mqdJoZ"
                 },
                 {
-                    "platform": "Draft2Digital",
                     "lang": "BG",
+                    "platform": "Draft2Digital",
                     "url": "https://books2read.com/u/3kErGO"
                 }
             ]
         }
     ],
-    "series": [],
+    "series": [
+        {
+            "id": "the-beyond-the-petrohan-Files",
+            "i18n": {
+                "en": {
+                    "title": "The Beyond the Petrohan Files",
+                    "series_synopsis": "The Beyond the Petrohan Files is an ambitious work of fiction that combines criminal investigation, psychological suspense, and political intrigue. Inspired by real events, figures, and social developments from the recent history of the Balkans, the series creates its own story beyond the official versions of the past — a world of secrets, power, betrayal, and hidden connections.\n\nAlthough the series draws inspiration from real history and the atmosphere of the era, it is a work of fiction. The plots, characters, actions, and relationships are products of the author’s imagination and are not intended to be a documentary representation of actual events or individuals."
+                }
+            },
+            "seriesImage": "",
+            "books": [
+                {
+                    "id": "square-knot",
+                    "i18n": {
+                        "bg": {
+                            "title": "Квадратен възел",
+                            "genre": "Balkan noir / FICTION / Thrillers / Political",
+                            "cover": "images/bg/---5.58.5.webp",
+                            "synopsis": "synopsis/bg/square-knot.txt",
+                            "excerpt": "books/bg/square-knot.md"
+                        },
+                        "en": {
+                            "title": "Square Knot",
+                            "genre": "Balkan noir / FICTION / Thrillers / Political",
+                            "cover": "images/en/Square-Knot-EN_.webp",
+                            "synopsis": "synopsis/en/square-knot.txt",
+                            "excerpt": "books/en/square-knot.md"
+                        }
+                    },
+                    "links": [
+                        {
+                            "platform": "Laterpress",
+                            "lang": "BG",
+                            "url": "https://eurotvshop.bg/produkt/kvadraten-vazel-karel-voden/"
+                        },
+                        {
+                            "platform": "Draft2Digital",
+                            "lang": "EN",
+                            "url": "https://books2read.com/u/bOB2Bo"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
     "short_stories": []
 };
