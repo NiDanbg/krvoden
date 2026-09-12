@@ -615,14 +615,6 @@ const authorData = {
     ],
     "series": [
         {
-            "id": "the-beyond-the-petrohan-Files",
-            "i18n": {
-                "en": {
-                    "title": "The Beyond the Petrohan Files",
-                    "series_synopsis": "The Beyond the Petrohan Files is an ambitious work of fiction that combines criminal investigation, psychological suspense, and political intrigue. Inspired by real events, figures, and social developments from the recent history of the Balkans, the series creates its own story beyond the official versions of the past — a world of secrets, power, betrayal, and hidden connections.\n\nAlthough the series draws inspiration from real history and the atmosphere of the era, it is a work of fiction. The plots, characters, actions, and relationships are products of the author’s imagination and are not intended to be a documentary representation of actual events or individuals."
-                }
-            },
-            "seriesImage": "",
             "books": [
                 {
                     "id": "square-knot",
@@ -640,6 +632,13 @@ const authorData = {
                             "cover": "images/en/Square-Knot-EN_.webp",
                             "synopsis": "synopsis/en/square-knot.txt",
                             "excerpt": "books/en/square-knot.md"
+                        },
+                        "de": {
+                            "title": "Kreuzknoten",
+                            "genre": "Balkan noir / FICTION / Thrillers / Political",
+                            "cover": "images/de/KREUZKNOTEN-DE.webp",
+                            "synopsis": "synopsis/de/square-knot.txt",
+                            "excerpt": "books/de/square-knot.md"
                         }
                     },
                     "links": [
@@ -652,10 +651,28 @@ const authorData = {
                             "platform": "Draft2Digital",
                             "lang": "EN",
                             "url": "https://books2read.com/u/bOB2Bo"
+                        },
+                        {
+                            "platform": "Draft2Digital",
+                            "lang": "DE",
+                            "url": "https://books2read.com/u/mgAVZz"
+                        },
+                        {
+                            "platform": "Amazon",
+                            "lang": "EN",
+                            "url": "https://www.amazon.com/dp/B0HHB25J99"
                         }
                     ]
                 }
-            ]
+            ],
+            "i18n": {
+                "en": {
+                    "series_synopsis": "The Beyond the Petrohan Files is an ambitious work of fiction that combines criminal investigation, psychological suspense, and political intrigue. Inspired by real events, figures, and social developments from the recent history of the Balkans, the series creates its own story beyond the official versions of the past — a world of secrets, power, betrayal, and hidden connections.\n\nAlthough the series draws inspiration from real history and the atmosphere of the era, it is a work of fiction. The plots, characters, actions, and relationships are products of the author’s imagination and are not intended to be a documentary representation of actual events or individuals.",
+                    "title": "The Beyond the Petrohan Files"
+                }
+            },
+            "id": "the-beyond-the-petrohan-Files",
+            "seriesImage": ""
         }
     ],
     "short_stories": []
