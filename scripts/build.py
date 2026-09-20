@@ -8,6 +8,7 @@ Usage:  python scripts/build.py
 """
 import hashlib
 import json
+from datetime import datetime
 import re
 import shutil
 import sys
@@ -60,6 +61,24 @@ def load_author_data():
     for i, s_val in enumerate(strings):
         obj = obj.replace(f'\x02{i}\x02', s_val)
     return json.loads(obj)
+
+
+def clip(text, limit=160):
+    """A meta description cut mid-word reads like a glitch in the search result.
+    Cut at the last whole word instead, and say so with an ellipsis."""
+    text = ' '.join(str(text or '').split())
+    if len(text) <= limit:
+        return text
+    cut = text[:limit - 1]
+    space = cut.rfind(' ')
+    if space > limit * 0.6:
+        cut = cut[:space]
+    return cut.rstrip(' ,;:.\u2014-') + '\u2026'
+
+
+def strip_tags(html_str):
+    """Meta descriptions are plain text. The author intro carries a link."""
+    return ' '.join(re.sub(r'<[^>]+>', '', html_str or '').split())
 
 
 def read_text(relpath):
@@ -125,12 +144,28 @@ def load_news():
 SITEMAP = []
 
 
-def write_page(path, html_str, priority=0.5):
+def write_page(path, html_str, priority=0.5, lastmod=None, hreflangs=None):
     rel = path.strip('/')
     target_dir = (DIST / rel) if rel else DIST
     target_dir.mkdir(parents=True, exist_ok=True)
     (target_dir / 'index.html').write_text(html_str, encoding='utf-8')
-    SITEMAP.append((R.BASE_URL + path, priority))
+    SITEMAP.append((R.BASE_URL + path, priority, lastmod, hreflangs))
+
+
+def source_date(*relpaths):
+    """Date a page's source was last touched, as YYYY-MM-DD. Only real files
+    count - a made-up lastmod is worse than none, because Google stops trusting
+    the whole sitemap once it catches one."""
+    stamps = []
+    for rel in relpaths:
+        if not rel:
+            continue
+        f = BASE / rel
+        if f.exists():
+            stamps.append(f.stat().st_mtime)
+    if not stamps:
+        return None
+    return datetime.fromtimestamp(max(stamps)).strftime('%Y-%m-%d')
 
 
 def iter_all_books(data):
@@ -249,6 +284,64 @@ def _clean_dist():
     shutil.rmtree(DIST, ignore_errors=True)
 
 
+# Crawlers that fetch a page to answer someone's question right now, and cite
+# the source back to them. These are the ones that send readers here.
+AI_SEARCH_AGENTS = [
+    'OAI-SearchBot',        # OpenAI - the index behind ChatGPT search
+    'ChatGPT-User',         # OpenAI - fetched because a user asked for this page
+    'Claude-SearchBot',     # Anthropic - search index
+    'Claude-User',          # Anthropic - fetched on a user's request
+    'PerplexityBot',        # Perplexity - index
+    'Perplexity-User',      # Perplexity - fetched on a user's request
+    'DuckAssistBot',        # DuckDuckGo
+    'MistralAI-User',       # Mistral
+    'YouBot',               # You.com
+    'Meta-ExternalFetcher', # Meta - fetched on a user's request
+]
+
+# Crawlers that collect text for training. Karel Voden allows these; to change
+# that, move a name out of this list and give it Disallow: / instead.
+AI_TRAINING_AGENTS = [
+    'GPTBot',               # OpenAI
+    'ClaudeBot',            # Anthropic
+    'Google-Extended',      # Google - Gemini and Vertex AI
+    'Applebot-Extended',    # Apple Intelligence
+    'meta-externalagent',   # Meta
+    'CCBot',                # Common Crawl, which most others are built from
+    'Amazonbot',            # Amazon
+    'Bytespider',           # ByteDance
+    'cohere-ai',            # Cohere
+]
+
+# Ordinary search engines. Gemini's answers lean on Google's index, so
+# Googlebot matters for AI answers as much as Google-Extended does.
+SEARCH_AGENTS = ['Googlebot', 'Googlebot-Image', 'bingbot', 'Applebot', 'DuckDuckBot']
+
+
+def robots_txt():
+    """Every crawler answered by name. A wildcard Allow says the same thing, but
+    naming them makes the policy readable and makes changing one a one-line edit."""
+    out = ['# robots.txt - krvoden.com',
+           '# Everything on this site is open to every crawler listed below.',
+           '',
+           'User-agent: *',
+           'Allow: /',
+           '']
+    for heading, agents in (
+        ('AI assistants that answer questions and cite the page', AI_SEARCH_AGENTS),
+        ('AI crawlers that collect text for training', AI_TRAINING_AGENTS),
+        ('Search engines', SEARCH_AGENTS),
+    ):
+        out.append(f'# {heading}')
+        for agent in agents:
+            out.append(f'User-agent: {agent}')
+            out.append('Allow: /')
+        out.append('')
+    out.append(f'Sitemap: {R.BASE_URL}/sitemap.xml')
+    out.append('')
+    return '\n'.join(out)
+
+
 def build():
     _clean_dist()
     DIST.mkdir(parents=True, exist_ok=True)
@@ -274,8 +367,9 @@ def build():
         write_page(R.home_path(ui), R.layout(
             data, lang=ui, path=R.home_path(ui),
             title=R.site_title(data, ui),
-            description=data['meta'][ui]['intro'][:160],
+            description=clip(strip_tags(data['meta'][ui]['intro'])),
             body_html=body, active_nav_base='/',
+            jsonld=[R.jsonld_website(data, ui), R.jsonld_person(data, ui)],
             nav_lang_switch=same_route_switch(lambda l: R.home_path(l)),
         ), 1.0)
 
@@ -283,7 +377,7 @@ def build():
         write_page(R.library_path(ui), R.layout(
             data, lang=ui, path=R.library_path(ui),
             title=f"{R.UI_STRINGS[ui]['the_library']} | {R.author_name(data, ui)}",
-            description=R.UI_STRINGS[ui]['explore_series'],
+            description=R.UI_STRINGS[ui]['desc_library'],
             body_html=body, active_nav_base='library/',
             nav_lang_switch=same_route_switch(lambda l: R.library_path(l)),
         ), 0.9)
@@ -292,8 +386,8 @@ def build():
             body = R.render_book_list_page(data, ui, kind)
             write_page(R.library_path(ui, sub), R.layout(
                 data, lang=ui, path=R.library_path(ui, sub),
-                title=f"{R.author_name(data, ui)}",
-                description=R.UI_STRINGS[ui]['the_library'],
+                title=f"{R.UI_STRINGS[ui]['standalone_novels'] if sub == 'novels' else R.UI_STRINGS[ui]['short_stories']} | {R.author_name(data, ui)}",
+                description=R.UI_STRINGS[ui]['desc_novels' if sub == 'novels' else 'desc_stories'],
                 body_html=body, active_nav_base='library/',
                 nav_lang_switch=same_route_switch(lambda l, s=sub: R.library_path(l, s)),
             ), 0.6)
@@ -304,19 +398,21 @@ def build():
             write_page(R.series_path(series['id'], ui), R.layout(
                 data, lang=ui, path=R.series_path(series['id'], ui),
                 title=f"{sd.get('title', series['id'])} | {R.author_name(data, ui)}",
-                description=(sd.get('series_synopsis') or '')[:160],
+                description=clip(sd.get('series_synopsis')) or R.UI_STRINGS[ui]['desc_library'],
                 body_html=body,
                 nav_lang_switch=same_route_switch(lambda l, sid=series['id']: R.series_path(sid, l)),
             ), 0.7)
 
         about_photo = data['meta'].get('photo') or 'images/common/author-placeholder.jpg'
-        bio_html = MD.bio_html(read_text(f'synopsis/{ui}/about.txt'))
+        bio_txt = read_text(f'synopsis/{ui}/about.txt')
+        bio_html = MD.bio_html(bio_txt)
         body = R.render_about_page(data, ui, bio_html, about_photo)
         write_page(R.about_path(ui), R.layout(
             data, lang=ui, path=R.about_path(ui),
             title=f"{R.UI_STRINGS[ui]['about_the_author']} | {R.author_name(data, ui)}",
-            description=R.UI_STRINGS[ui]['about_the_author'],
-            body_html=body, active_nav_base='about/',
+            description=clip(bio_txt) or R.UI_STRINGS[ui]['desc_about'],
+            body_html=body, active_nav_base='about/', og_type='profile',
+            jsonld=R.jsonld_person(data, ui, bio_txt),
             nav_lang_switch=same_route_switch(lambda l: R.about_path(l)),
         ), 0.8)
 
@@ -333,7 +429,7 @@ def build():
         write_page(R.news_path(ui), R.layout(
             data, lang=ui, path=R.news_path(ui),
             title=f"{R.UI_STRINGS[ui]['news_and_updates']} | {R.author_name(data, ui)}",
-            description=R.UI_STRINGS[ui]['news_and_updates'],
+            description=R.UI_STRINGS[ui]['desc_news'],
             body_html=body, active_nav_base='news/',
             nav_lang_switch=same_route_switch(lambda l: R.news_path(l)),
         ), 0.8)
@@ -348,17 +444,18 @@ def build():
             write_page(R.news_article_path(article['slug'], ui), R.layout(
                 data, lang=ui, path=R.news_article_path(article['slug'], ui),
                 title=f"{article['title']} | {R.author_name(data, ui)}",
-                description=article['excerpt'][:160],
-                body_html=body, active_nav_base='news/',
+                description=clip(article['excerpt']),
+                body_html=body, active_nav_base='news/', og_type='article',
+                jsonld=R.jsonld_article(data, ui, article),
                 nav_lang_switch=switch,
-            ), 0.5)
+            ), 0.5, lastmod=article.get('date_raw') or None)
 
         title, priv_body = MD.privacy_html(read_text(f'synopsis/{ui}/privacy-policy.txt'))
         body = R.render_privacy_page(ui, title or R.UI_STRINGS[ui]['privacy_policy'], priv_body)
         write_page(R.privacy_path(ui), R.layout(
             data, lang=ui, path=R.privacy_path(ui),
             title=f"{R.UI_STRINGS[ui]['privacy_policy']} | {R.author_name(data, ui)}",
-            description=R.UI_STRINGS[ui]['privacy_policy'],
+            description=R.UI_STRINGS[ui]['desc_privacy'],
             body_html=body,
             nav_lang_switch=same_route_switch(lambda l: R.privacy_path(l)),
         ), 0.3)
@@ -367,7 +464,7 @@ def build():
             write_page(R.store_path(ui), R.layout(
                 data, lang=ui, path=R.store_path(ui),
                 title=f"{R.UI_STRINGS[ui]['store']} | {R.author_name(data, ui)}",
-                description=R.UI_STRINGS[ui]['store_intro'][:160],
+                description=clip(R.UI_STRINGS[ui]['store_intro']),
                 body_html=R.render_store_page(shop, ui), active_nav_base='store/',
                 nav_lang_switch=same_route_switch(lambda l: R.store_path(l)),
             ), 0.8)
@@ -377,12 +474,17 @@ def build():
         write_page(R.terms_path(ui), R.layout(
             data, lang=ui, path=R.terms_path(ui),
             title=f"{R.UI_STRINGS[ui]['terms_of_service']} | {R.author_name(data, ui)}",
-            description=R.UI_STRINGS[ui]['terms_of_service'],
+            description=R.UI_STRINGS[ui]['desc_terms'],
             body_html=body,
             nav_lang_switch=same_route_switch(lambda l: R.terms_path(l)),
         ), 0.3)
 
     # ---- content-language pages (book / excerpt) ----
+    series_of = {}
+    for s in data.get('series', []):
+        for b in s.get('books', []):
+            series_of[b['id']] = s
+
     for book in iter_all_books(data):
         bid = book['id']
         i18n = book['i18n']
@@ -394,26 +496,35 @@ def build():
             bdata = i18n[lang]
             synopsis_txt = read_text(bdata['synopsis']) if bdata.get('synopsis') else ''
             synopsis_html = MD.synopsis_html(synopsis_txt)
-            body = R.render_book_detail(data, book, lang, synopsis_html)
+            series = series_of.get(bid)
+            body = R.render_book_detail(data, book, lang, synopsis_html, series)
             write_page(R.book_path(bid, lang), R.layout(
                 data, lang=lang, path=R.book_path(bid, lang),
                 title=f"{bdata['title']} | {R.author_name(data, lang)}",
-                description=(' '.join(synopsis_txt.split()) or bdata['title'])[:160],
+                description=clip(synopsis_txt) or bdata['title'],
                 og_image=bdata.get('cover') or 'images/common/cover-placeholder.jpg',
                 body_html=body, hreflangs=hreflangs, nav_lang_switch=switch,
-            ), 0.6)
+                og_type='book',
+                jsonld=[R.jsonld_book(data, book, lang, synopsis_txt, series),
+                        R.book_breadcrumbs(data, book, lang, series)],
+            ), 0.6, lastmod=source_date(bdata.get('synopsis')), hreflangs=hreflangs)
 
             if bdata.get('excerpt'):
                 excerpt_txt = read_text(bdata['excerpt'])
                 excerpt_html = MD.to_html(excerpt_txt)
                 body = R.render_excerpt_page(book, lang, excerpt_html)
+                s_ui = R.UI_STRINGS[R.ui_lang_of(lang)]
+                excerpt_desc = f"{s_ui['excerpt_from']} „{bdata['title']}“. " + \
+                               ' '.join(synopsis_txt.split())
                 write_page(R.excerpt_path(bid, lang), R.layout(
                     data, lang=lang, path=R.excerpt_path(bid, lang),
-                    title=f"{R.UI_STRINGS[R.ui_lang_of(lang)]['excerpt_from']} {bdata['title']} | {R.author_name(data, lang)}",
-                    description=bdata['title'],
+                    title=f"{s_ui['excerpt_from']} {bdata['title']} | {R.author_name(data, lang)}",
+                    description=clip(excerpt_desc),
                     og_image=bdata.get('cover') or 'images/common/cover-placeholder.jpg',
                     body_html=body, hreflangs=hreflangs, nav_lang_switch=switch,
-                ), 0.5)
+                    jsonld=R.book_breadcrumbs(data, book, lang, series,
+                                              leaf=s_ui['read_excerpt_short']),
+                ), 0.5, lastmod=source_date(bdata.get('excerpt')))
 
     # ---- static assets ----
     for name in ('images', 'style.css'):
@@ -440,13 +551,24 @@ def build():
     ), encoding='utf-8')
 
     (DIST / 'robots.txt').write_text(
-        f"User-agent: *\nAllow: /\n\nSitemap: {R.BASE_URL}/sitemap.xml\n", encoding='utf-8'
+        robots_txt(), encoding='utf-8'
     )
 
     sitemap_xml = ['<?xml version="1.0" encoding="UTF-8"?>',
-                   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for url, priority in SITEMAP:
-        sitemap_xml.append(f'    <url><loc>{url}</loc><priority>{priority}</priority></url>')
+                   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'
+                   ' xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for url, priority, lastmod, hreflangs in SITEMAP:
+        row = [f'    <url><loc>{url}</loc>']
+        if lastmod:
+            row.append(f'<lastmod>{lastmod}</lastmod>')
+        row.append(f'<priority>{priority}</priority>')
+        if hreflangs:
+            for code, alt in hreflangs:
+                row.append(f'<xhtml:link rel="alternate" hreflang="{R.bcp47(code)}" href="{alt}"/>')
+            default = dict(hreflangs).get('en') or hreflangs[0][1]
+            row.append(f'<xhtml:link rel="alternate" hreflang="x-default" href="{default}"/>')
+        row.append('</url>')
+        sitemap_xml.append(''.join(row))
     sitemap_xml.append('</urlset>')
     (DIST / 'sitemap.xml').write_text('\n'.join(sitemap_xml), encoding='utf-8')
 

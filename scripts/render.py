@@ -3,6 +3,7 @@ Pure, dependency-free HTML template functions for the Karel Voden SSG build.
 No DOM, no fetch — every function takes plain data and returns an HTML string.
 """
 import html as _html
+import json as _json
 
 BASE_URL = "https://krvoden.com"
 GA_ID = "G-GF28ENCM9M"
@@ -19,6 +20,20 @@ def asset_v(kind):
 
 
 ALL_LANGS = ['bg', 'en', 'de', 'fr', 'it', 'nl', 'es', 'pt', 'se']
+
+# The site calls Swedish "se" in its folders, but "se" is Northern Sami to a
+# search engine. Everything a crawler reads - <html lang>, hreflang, og:locale -
+# goes out as the real code; the folder names stay as they are.
+BCP47 = {'se': 'sv'}
+
+OG_LOCALES = {'bg': 'bg_BG', 'en': 'en_US', 'de': 'de_DE', 'fr': 'fr_FR', 'it': 'it_IT',
+              'nl': 'nl_NL', 'es': 'es_ES', 'pt': 'pt_PT', 'se': 'sv_SE'}
+
+
+def bcp47(lang):
+    return BCP47.get(lang, lang)
+
+
 UI_LANGS = ['en', 'bg']
 
 NAV_LABELS = {
@@ -72,6 +87,13 @@ UI_STRINGS = {
         'search_placeholder': 'Search for a book…',
         'search_none': 'Nothing found',
         'get_gift': 'Get it free',
+        'desc_library': 'Every novel and short story by Karel Voden, with the series they belong to and the languages each one is published in.',
+        'desc_novels': 'The standalone novels of Karel Voden - thrillers that braid ancient mysteries into modern conspiracies.',
+        'desc_stories': 'Short stories by Karel Voden, set in the worlds his novels open up.',
+        'desc_news': 'Releases, translations and what Karel Voden is working on next.',
+        'desc_about': 'Karel Voden writes international thrillers and conspiracy fiction. Who he is and how the books came about.',
+        'desc_privacy': 'What this site collects, why, and how to have it removed.',
+        'desc_terms': 'Digital delivery, refunds and copyright for the ebooks sold directly on this site.',
     },
     'bg': {
         'synopsis_not_available': 'Няма налична анотация.',
@@ -116,6 +138,13 @@ UI_STRINGS = {
         'search_placeholder': 'Търсене на книга…',
         'search_none': 'Няма намерено',
         'get_gift': 'Вземи безплатно',
+        'desc_library': 'Всички романи и разкази на Karel Voden, поредиците, към които принадлежат, и езиците, на които излизат.',
+        'desc_novels': 'Самостоятелните романи на Karel Voden - трилъри, в които древни загадки се преплитат със съвременни конспирации.',
+        'desc_stories': 'Разкази на Karel Voden, разположени в световете на романите му.',
+        'desc_news': 'Нови заглавия, преводи и над какво работи Karel Voden в момента.',
+        'desc_about': 'Karel Voden пише международни трилъри и конспиративна фантастика. Кой е той и как се раждат книгите му.',
+        'desc_privacy': 'Какво събира този сайт, защо и как да поискате данните си да бъдат изтрити.',
+        'desc_terms': 'Доставка, връщане на суми и авторски права за електронните книги, продавани директно тук.',
     },
 }
 
@@ -171,6 +200,147 @@ LANG_NAMES = {
 # Set by build.py: False hides the bookshop from the menu, the footer and the
 # homepage, so nothing ever points at an empty shelf.
 STORE_ACTIVE = False
+
+
+# Each language's own name for itself. One list serves all nine editions, which
+# beats keeping nine names in nine languages.
+LANG_AUTONYMS = {
+    'bg': 'български', 'en': 'English', 'de': 'Deutsch', 'fr': 'Français',
+    'it': 'Italiano', 'nl': 'Nederlands', 'es': 'Español', 'pt': 'Português',
+    'se': 'Svenska',
+}
+
+# The plain statement of what a book is, in the language of the book. A reader
+# infers it from the cover; a language model has to read it written down.
+# Every part is optional - the sentence is assembled from whatever data exists.
+BOOK_FACTS = {
+    'bg': {'base': '„{title}“ е {genre} от {author}.',
+           'series_n': ' Книга {n} от поредицата „{series}“.',
+           'series': ' Част от поредицата „{series}“.',
+           'published': ' Издадена през {year} г.',
+           'publisher': ' Издател: {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Издания на: {langs}.'},
+    'en': {'base': '“{title}” is a {genre} by {author}.',
+           'series_n': ' Book {n} of the {series} series.',
+           'series': ' Part of the {series} series.',
+           'published': ' Published in {year}.',
+           'publisher': ' Publisher: {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Editions in: {langs}.'},
+    'de': {'base': '„{title}“ ist ein {genre} von {author}.',
+           'series_n': ' Band {n} der Reihe „{series}“.',
+           'series': ' Teil der Reihe „{series}“.',
+           'published': ' Erschienen {year}.',
+           'publisher': ' Verlag: {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Ausgaben auf: {langs}.'},
+    'fr': {'base': '« {title} » est un {genre} de {author}.',
+           'series_n': ' Tome {n} de la série « {series} ».',
+           'series': ' Fait partie de la série « {series} ».',
+           'published': ' Publié en {year}.',
+           'publisher': ' Éditeur : {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Éditions en : {langs}.'},
+    'it': {'base': '«{title}» è un {genre} di {author}.',
+           'series_n': ' Libro {n} della serie «{series}».',
+           'series': ' Fa parte della serie «{series}».',
+           'published': ' Pubblicato nel {year}.',
+           'publisher': ' Editore: {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Edizioni in: {langs}.'},
+    'nl': {'base': '“{title}” is een {genre} van {author}.',
+           'series_n': ' Deel {n} van de reeks “{series}”.',
+           'series': ' Onderdeel van de reeks “{series}”.',
+           'published': ' Verschenen in {year}.',
+           'publisher': ' Uitgever: {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Edities in: {langs}.'},
+    'es': {'base': '«{title}» es un {genre} de {author}.',
+           'series_n': ' Libro {n} de la serie «{series}».',
+           'series': ' Forma parte de la serie «{series}».',
+           'published': ' Publicado en {year}.',
+           'publisher': ' Editorial: {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Ediciones en: {langs}.'},
+    'pt': {'base': '«{title}» é um {genre} de {author}.',
+           'series_n': ' Livro {n} da série «{series}».',
+           'series': ' Faz parte da série «{series}».',
+           'published': ' Publicado em {year}.',
+           'publisher': ' Editora: {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Edições em: {langs}.'},
+    'se': {'base': '”{title}” är en {genre} av {author}.',
+           'series_n': ' Bok {n} i serien ”{series}”.',
+           'series': ' Del av serien ”{series}”.',
+           'published': ' Utgiven {year}.',
+           'publisher': ' Förlag: {publisher}.',
+           'isbn': ' ISBN {isbn}.',
+           'langs': ' Utgåvor på: {langs}.'},
+}
+
+
+def short_genre(genre):
+    """Genre fields are catalogue strings - "Balkan noir / FICTION / Thrillers"
+    or "Исторически техно-трилър, Конспиративен трилър". A sentence needs the
+    first part, spelled the way the author typed it: lowercasing turns a name
+    like Balkan noir into something that reads as a mistake."""
+    import re as _re
+    return _re.split(r'[/,;]', str(genre or ''))[0].strip()
+
+
+def year_of(date_str):
+    """First four digits of whatever the admin panel holds: 2026-03-14, 03/2026, 2026."""
+    import re as _re
+    m = _re.search(r'\d{4}', str(date_str or ''))
+    return m.group(0) if m else ''
+
+
+def series_title_for(series, lang):
+    if not series:
+        return ''
+    ui = ui_lang_of(lang)
+    sd = series['i18n'].get(lang) or series['i18n'].get(ui) or series['i18n'].get('en') or {}
+    return sd.get('title', '')
+
+
+def book_facts_sentence(data, book, lang, series=None):
+    """One sentence stating what this book is, built from whatever data exists.
+    Empty when there is not even a genre to state."""
+    bdata = book['i18n'].get(lang) or {}
+    tpl = BOOK_FACTS.get(lang, BOOK_FACTS['en'])
+    genre = short_genre(bdata.get('genre'))
+    if not genre or not bdata.get('title'):
+        return ''
+    out = tpl['base'].format(title=bdata['title'], genre=genre,
+                             author=author_name(data, lang))
+    stitle = series_title_for(series, lang)
+    if stitle:
+        if lang == 'en':
+            # The English template supplies the article, so a series called
+            # "The Beyond the Petrohan Files" must not bring its own.
+            import re as _re
+            stitle = _re.sub(r'^the\s+', '', stitle, flags=_re.IGNORECASE)
+        pos = book.get('position')
+        out += (tpl['series_n'].format(n=pos, series=stitle) if pos
+                else tpl['series'].format(series=stitle))
+    year = year_of(bdata.get('published'))
+    if year:
+        out += tpl['published'].format(year=year)
+    if bdata.get('publisher'):
+        out += tpl['publisher'].format(publisher=bdata['publisher'])
+    if bdata.get('isbn'):
+        out += tpl['isbn'].format(isbn=bdata['isbn'])
+    others = [LANG_AUTONYMS[l] for l in ALL_LANGS
+              if l in book.get('i18n', {}) and book['i18n'][l].get('title')]
+    if len(others) > 1:
+        out += tpl['langs'].format(langs=', '.join(others))
+    return out
+
+
+def render_book_facts(data, book, lang, series=None):
+    text = book_facts_sentence(data, book, lang, series)
+    return f'<p class="book-facts">{esc(text)}</p>' if text else ''
 
 
 def esc(s):
@@ -260,18 +430,169 @@ def find_book_by_id(data, bid):
 
 
 # ─────────────────────────────────────────────────────────────────────────
+# STRUCTURED DATA (JSON-LD)
+# ─────────────────────────────────────────────────────────────────────────
+
+def abs_url(path):
+    """Site-root-relative path or asset path -> absolute URL."""
+    return BASE_URL + '/' + str(path or '').lstrip('/')
+
+
+def person_ref(data, lang):
+    """The author, as one node every other node can point at."""
+    ui = ui_lang_of(lang)
+    node = {
+        '@type': 'Person',
+        '@id': BASE_URL + '/#author',
+        'name': author_name(data, lang),
+        'url': abs_url(about_path(ui)),
+    }
+    photo = (data.get('meta') or {}).get('photo')
+    if photo:
+        node['image'] = abs_url(photo)
+    return node
+
+
+def jsonld_website(data, lang):
+    ui = ui_lang_of(lang)
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        '@id': BASE_URL + '/#website',
+        'name': site_title(data, ui),
+        'url': abs_url(home_path(ui)),
+        'inLanguage': bcp47(ui),
+        'publisher': person_ref(data, ui),
+    }
+
+
+def jsonld_person(data, lang, bio_text=''):
+    ui = ui_lang_of(lang)
+    node = dict(person_ref(data, ui), **{'@context': 'https://schema.org'})
+    bio = ' '.join((bio_text or '').split())
+    if bio:
+        node['description'] = bio[:300]
+    node['jobTitle'] = 'Author' if ui == 'en' else 'Писател'
+    return node
+
+
+def jsonld_book(data, book, lang, synopsis_text='', series=None):
+    """One node per language edition, because each edition has its own title,
+    cover and - where the author sells it himself - its own price."""
+    bdata = book['i18n'].get(lang) or {}
+    node = {
+        '@context': 'https://schema.org',
+        '@type': 'Book',
+        'name': bdata.get('title', ''),
+        'url': abs_url(book_path(book['id'], lang)),
+        'author': person_ref(data, lang),
+        'inLanguage': bcp47(lang),
+        'bookFormat': 'https://schema.org/EBook',
+    }
+    if bdata.get('genre'):
+        node['genre'] = bdata['genre']
+    if bdata.get('published'):
+        node['datePublished'] = str(bdata['published'])
+    if bdata.get('isbn'):
+        node['isbn'] = str(bdata['isbn'])
+    if bdata.get('publisher'):
+        node['publisher'] = {'@type': 'Organization', 'name': bdata['publisher']}
+    if book.get('position'):
+        node['position'] = book['position']
+    node['abstract'] = book_facts_sentence(data, book, lang, series)
+    if bdata.get('cover'):
+        node['image'] = abs_url(bdata['cover'])
+    syn = ' '.join((synopsis_text or '').split())
+    if syn:
+        node['description'] = syn[:300]
+    if series:
+        ui = ui_lang_of(lang)
+        sd = series['i18n'].get(lang) or series['i18n'].get(ui) or series['i18n'].get('en') or {}
+        if sd.get('title'):
+            node['isPartOf'] = {
+                '@type': 'BookSeries',
+                'name': sd['title'],
+                'url': abs_url(series_path(series['id'], ui)),
+            }
+    url = (bdata.get('creem_checkout_url') or '').strip()
+    price = str(bdata.get('price') or '').strip()
+    if bdata.get('direct_sale_active') and url and price:
+        node['offers'] = {
+            '@type': 'Offer',
+            'price': price,
+            'priceCurrency': 'EUR',
+            'availability': 'https://schema.org/InStock',
+            'url': url,
+        }
+    if not node.get('abstract'):
+        node.pop('abstract', None)
+    links = [l for l in book.get('links', []) if l.get('lang', '').lower() == lang.lower() and l.get('url')]
+    if links:
+        node['sameAs'] = [l['url'] for l in links]
+    return node
+
+
+def jsonld_article(data, lang, article):
+    ui = ui_lang_of(lang)
+    node = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': article.get('title', ''),
+        'url': abs_url(news_article_path(article['slug'], ui)),
+        'author': person_ref(data, ui),
+        'publisher': person_ref(data, ui),
+        'inLanguage': bcp47(ui),
+    }
+    if article.get('date_raw'):
+        node['datePublished'] = article['date_raw']
+    if article.get('excerpt'):
+        node['description'] = article['excerpt'][:300]
+    return node
+
+
+def jsonld_breadcrumbs(items):
+    """items: list of (name, site-root-relative path)."""
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            {'@type': 'ListItem', 'position': i, 'name': name, 'item': abs_url(path)}
+            for i, (name, path) in enumerate(items, start=1)
+        ],
+    }
+
+
+def book_breadcrumbs(data, book, lang, series=None, leaf=None):
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    bdata = book['i18n'].get(lang) or {}
+    items = [(author_name(data, ui), home_path(ui)), (s['the_library'], library_path(ui))]
+    if series:
+        sd = series['i18n'].get(lang) or series['i18n'].get(ui) or series['i18n'].get('en') or {}
+        if sd.get('title'):
+            items.append((sd['title'], series_path(series['id'], ui)))
+    items.append((bdata.get('title', book['id']), book_path(book['id'], lang)))
+    if leaf:
+        items.append((leaf, excerpt_path(book['id'], lang)))
+    return jsonld_breadcrumbs(items)
+
+
+# ─────────────────────────────────────────────────────────────────────────
 # LAYOUT
 # ─────────────────────────────────────────────────────────────────────────
 
 def layout(data, *, lang, path, title, description, body_html,
            og_image='images/common/social-share.jpg', hreflangs=None,
-           active_nav_base=None, nav_lang_switch=None):
+           active_nav_base=None, nav_lang_switch=None,
+           og_type='website', jsonld=None):
     """
     lang: content/page language (drives <html lang>)
     path: this page's site-root-relative path, e.g. '/book/foo/'
     hreflangs: list of (hreflang_code, absolute_url) for <link rel=alternate>
     active_nav_base: which nav item should be marked active ('/', 'library/', ...)
     nav_lang_switch: {'en': url_or_None, 'bg': url_or_None} for the EN|BG switcher
+    og_type: 'website', 'book', 'article', 'profile'
+    jsonld: one schema.org dict, or a list of them
     """
     ui = ui_lang_of(lang)
     depth = path.strip('/').count('/') + 1 if path != '/' else 0
@@ -279,9 +600,28 @@ def layout(data, *, lang, path, title, description, body_html,
     canonical = BASE_URL + path
 
     hreflang_tags = ''
+    locale_alt_tags = ''
     if hreflangs:
-        hreflang_tags = '\n    '.join(
-            f'<link rel="alternate" hreflang="{code}" href="{url}">' for code, url in hreflangs
+        tags = [f'<link rel="alternate" hreflang="{bcp47(code)}" href="{url}">'
+                for code, url in hreflangs]
+        # Whoever does not match any of the listed languages lands on the English
+        # edition; without x-default Google picks one for them.
+        default = dict(hreflangs).get('en') or hreflangs[0][1]
+        tags.append(f'<link rel="alternate" hreflang="x-default" href="{default}">')
+        hreflang_tags = '\n    '.join(tags)
+        locale_alt_tags = '\n    '.join(
+            f'<meta property="og:locale:alternate" content="{OG_LOCALES[code]}">'
+            for code, _ in hreflangs if code != lang and code in OG_LOCALES
+        )
+
+    jsonld_tags = ''
+    if jsonld:
+        blocks = jsonld if isinstance(jsonld, list) else [jsonld]
+        jsonld_tags = '\n    '.join(
+            '<script type="application/ld+json">'
+            + _json.dumps(b, ensure_ascii=False, separators=(',', ':'))
+            + '</script>'
+            for b in blocks
         )
 
     nav_items = ''
@@ -309,7 +649,7 @@ def layout(data, *, lang, path, title, description, body_html,
     strings = UI_STRINGS[ui]
 
     return f"""<!DOCTYPE html>
-<html lang="{lang}">
+<html lang="{bcp47(lang)}" data-site-lang="{lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -322,10 +662,20 @@ def layout(data, *, lang, path, title, description, body_html,
     <meta property="og:description" content="{esc(description)}">
     <meta property="og:image" content="{BASE_URL}/{og_image.lstrip('/')}">
     <meta property="og:url" content="{canonical}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{og_type}">
+    <meta property="og:site_name" content="{esc(site_title(data, ui))}">
+    <meta property="og:locale" content="{OG_LOCALES.get(lang, 'en_US')}">
+    {locale_alt_tags}
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{esc(title)}">
+    <meta name="twitter:description" content="{esc(description)}">
+    <meta name="twitter:image" content="{BASE_URL}/{og_image.lstrip('/')}">
 
     <link rel="canonical" href="{canonical}">
     {hreflang_tags}
+
+    {jsonld_tags}
 
     <link rel="apple-touch-icon" sizes="180x180" href="{root}images/common/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="{root}images/common/favicons/favicon-32x32.png">
@@ -504,7 +854,7 @@ def render_book_list_page(data, lang, kind):
     return f"""<div class="container book-list-page"><h1>{esc(title)}</h1><div class="books-grid">{cards}</div></div>"""
 
 
-def render_book_detail(data, book, lang, synopsis_html):
+def render_book_detail(data, book, lang, synopsis_html, series=None):
     ui = ui_lang_of(lang)
     s = UI_STRINGS[ui]
     bdata = book['i18n'].get(lang) or book['i18n'].get('en')
@@ -530,6 +880,7 @@ def render_book_detail(data, book, lang, synopsis_html):
             <div class="book-detail-info">
                 <h1>{esc(bdata['title'])}</h1>
                 {f'<p class="book-genre">{esc(bdata["genre"])}</p>' if bdata.get('genre') else ''}
+                {render_book_facts(data, book, lang, series)}
                 <h3>{esc(s['synopsis'])}</h3><div class="synopsis">{synopsis_html}</div>
                 {render_lead_magnet(bdata, lang)}
                 {render_direct_sale(bdata, lang)}

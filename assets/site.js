@@ -25,7 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = searchBox.querySelector('.search-input');
         const results = searchBox.querySelector('.search-results');
         const noneText = results.dataset.none;
-        const pageLang = document.documentElement.lang || 'en';
+        // The site's own code for this page's language ("se"), not the one the
+        // crawler reads off <html lang> ("sv") — the index is keyed the site's way.
+        const pageLang = document.documentElement.dataset.siteLang
+            || document.documentElement.lang || 'en';
         let index = null, loading = null;
 
         const CYR = { 'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ж':'zh','з':'z','и':'i','й':'y',

@@ -594,6 +594,13 @@ function renderBookEditor(book, type, seriesId, isNew, texts) {
         <input id="bt-${l}" value="${esc(d.title||'')}" oninput="autoFillId()"></div>
       <div class="form-row"><label>Genre</label>
         <input id="bg-${l}" value="${esc(d.genre||'')}"></div>
+      <div class="form-row"><label>Published</label>
+        <input id="bpub-${l}" value="${esc(d.published||'')}" placeholder="2026-03-14 or just 2026"></div>
+      <div class="form-row"><label>Publisher</label>
+        <input id="bpubr-${l}" value="${esc(d.publisher||'')}" placeholder="Publishing house of this edition"></div>
+      <div class="form-row"><label>ISBN</label>
+        <input id="bisbn-${l}" value="${esc(d.isbn||'')}" placeholder="978-…"></div>
+      <div class="ds-hint">Release date, publisher and ISBN of the ${l.toUpperCase()} edition. Shown on the page and read by search engines and AI assistants. Leave blank if unknown.</div>
       <div class="form-row"><label>Cover</label>
         <div class="path-row">
           <input id="bc-${l}" value="${esc(d.cover||'')}">
@@ -661,6 +668,10 @@ function renderBookEditor(book, type, seriesId, isNew, texts) {
         <input id="bid" value="${esc(book.id||'')}" placeholder="e.g. my-book-title"
           ${isNew ? 'oninput="idManual=true"' : 'readonly'}>
       </div>
+      <div class="form-row">
+        <label>Book no.</label>
+        <input id="bpos" value="${esc(book.position == null ? '' : String(book.position))}"
+          placeholder="1, 2, 3 — position in the series (leave blank if standalone)"></div>
       <div class="form-row">
         <label>Category</label>
         <select id="btype">${typeOpts}</select>
@@ -769,6 +780,12 @@ async function saveBook() {
 
   const oldRef = S.editingIsNew ? null : findBook(S.editingBookId || id);
 
+  // Position in the series — a plain number or nothing at all
+  const posRaw = document.getElementById('bpos')?.value?.trim() || '';
+  if (posRaw && !/^\d{1,3}$/.test(posRaw)) {
+    toast('Book no. must be a whole number — e.g. 1', 'error'); return;
+  }
+
   const i18n      = {};
   const textSaves = [];
   for (const l of BOOK_LANGS) {
@@ -782,6 +799,12 @@ async function saveBook() {
       const excTxt  = document.getElementById(`be-${l}`)?.value?.trim();
       if (genre) i18n[l].genre = genre;
       if (cover) i18n[l].cover = cover;
+      const published = document.getElementById(`bpub-${l}`)?.value?.trim();
+      const publisher = document.getElementById(`bpubr-${l}`)?.value?.trim();
+      const isbn      = document.getElementById(`bisbn-${l}`)?.value?.trim();
+      if (published) i18n[l].published = published;
+      if (publisher) i18n[l].publisher = publisher;
+      if (isbn)      i18n[l].isbn = isbn;
       const lmEnabled = document.getElementById(`lme-${l}`)?.checked;
       const lmText    = document.getElementById(`lmt-${l}`)?.value?.trim();
       const lmImage   = document.getElementById(`lmi-${l}`)?.value?.trim();
@@ -832,6 +855,7 @@ async function saveBook() {
   });
 
   const book = { id, i18n, links };
+  if (posRaw) book.position = parseInt(posRaw, 10);
 
   const typeVal = document.getElementById('btype').value;
   let type = typeVal, seriesId = null;

@@ -615,6 +615,18 @@ const authorData = {
     ],
     "series": [
         {
+            "id": "the-beyond-the-petrohan-Files",
+            "i18n": {
+                "bg": {
+                    "title": "Отвъд досиетата Петрохан",
+                    "series_synopsis": "Поредицата „Отвъд досиетата Петрохан“ е амбициозно художествено произведение, което съчетава криминално разследване, психологическо напрежение и политическа интрига. Вдъхновена от реални събития, личности и обществени процеси от най-новата история на Балканите, поредицата създава своя собствена история отвъд официалните версии за миналото — един свят на тайни, власт, предателства и скрити връзки.\nМакар че поредицата черпи вдъхновение от реалната история и атмосферата на епохата, тя е художествено произведение. Сюжетите, героите, действията и взаимоотношенията са плод на въображението на автора и нямат за цел да бъдат документално пресъздаване на действителни събития или лица.“"
+                },
+                "en": {
+                    "title": "The Beyond the Petrohan Files",
+                    "series_synopsis": "The Beyond the Petrohan Files is an ambitious work of fiction that combines criminal investigation, psychological suspense, and political intrigue. Inspired by real events, figures, and social developments from the recent history of the Balkans, the series creates its own story beyond the official versions of the past — a world of secrets, power, betrayal, and hidden connections.\n\nAlthough the series draws inspiration from real history and the atmosphere of the era, it is a work of fiction. The plots, characters, actions, and relationships are products of the author’s imagination and are not intended to be a documentary representation of actual events or individuals."
+                }
+            },
+            "seriesImage": "",
             "books": [
                 {
                     "id": "square-knot",
@@ -623,6 +635,7 @@ const authorData = {
                             "title": "Квадратен възел",
                             "genre": "Balkan noir / FICTION / Thrillers / Political",
                             "cover": "images/bg/---5.58.5.webp",
+                            "published": "2026",
                             "synopsis": "synopsis/bg/square-knot.txt",
                             "excerpt": "books/bg/square-knot.md"
                         },
@@ -630,6 +643,7 @@ const authorData = {
                             "title": "Square Knot",
                             "genre": "Balkan noir / FICTION / Thrillers / Political",
                             "cover": "images/en/Square-Knot-EN_.webp",
+                            "published": "2026",
                             "synopsis": "synopsis/en/square-knot.txt",
                             "excerpt": "books/en/square-knot.md"
                         },
@@ -637,6 +651,7 @@ const authorData = {
                             "title": "Kreuzknoten",
                             "genre": "Balkan noir / FICTION / Thrillers / Political",
                             "cover": "images/de/KREUZKNOTEN-DE.webp",
+                            "published": "2026",
                             "synopsis": "synopsis/de/square-knot.txt",
                             "excerpt": "books/de/square-knot.md"
                         }
@@ -662,17 +677,10 @@ const authorData = {
                             "lang": "EN",
                             "url": "https://www.amazon.com/dp/B0HHB25J99"
                         }
-                    ]
+                    ],
+                    "position": 1
                 }
-            ],
-            "i18n": {
-                "en": {
-                    "series_synopsis": "The Beyond the Petrohan Files is an ambitious work of fiction that combines criminal investigation, psychological suspense, and political intrigue. Inspired by real events, figures, and social developments from the recent history of the Balkans, the series creates its own story beyond the official versions of the past — a world of secrets, power, betrayal, and hidden connections.\n\nAlthough the series draws inspiration from real history and the atmosphere of the era, it is a work of fiction. The plots, characters, actions, and relationships are products of the author’s imagination and are not intended to be a documentary representation of actual events or individuals.",
-                    "title": "The Beyond the Petrohan Files"
-                }
-            },
-            "id": "the-beyond-the-petrohan-Files",
-            "seriesImage": ""
+            ]
         }
     ],
     "short_stories": []
