@@ -192,6 +192,11 @@ textarea.text-editor { width: 100%; height: 280px; font-size: 13px; line-height:
 @keyframes slide-in { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
 .placeholder { color: var(--muted); padding: 40px; text-align: center; }
+
+/* -- Direct sale (per language edition) -- */
+.ds-sep { border-top: 1px dashed var(--border); margin: 14px 0 10px; }
+.ds-fields.off { opacity: .45; pointer-events: none; }
+.ds-hint { font-size: 11px; color: var(--muted); margin: 2px 0 0 90px; }
 </style>
 </head>
 <body>
@@ -603,6 +608,46 @@ function renderBookEditor(book, type, seriesId, isNew, texts) {
         <label style="padding-top:6px">Excerpt</label>
         <textarea class="book-ta" id="be-${l}" placeholder="Chapter excerpt (Markdown)...">${esc(tx.excerpt||'')}</textarea>
       </div>
+      ${d.title ? `<div class="form-row" style="justify-content:flex-end">
+        <button type="button" class="btn-danger btn-sm" onclick="deleteBookTranslation('${l}')">🗑 Delete ${l.toUpperCase()} translation</button>
+      </div>` : ''}
+      <div class="form-row">
+        <label>Free Gift</label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="lme-${l}" ${d.leadMagnet?.enabled ? 'checked' : ''}
+            style="width:auto">
+          <span style="color:var(--muted);font-size:12px">Show lead-magnet banner for this book/language</span>
+        </div>
+      </div>
+      <div class="form-row" style="align-items:flex-start">
+        <label style="padding-top:6px">Gift Text</label>
+        <textarea class="book-ta" id="lmt-${l}" placeholder="e.g. Get a free bonus story from this world...">${esc(d.leadMagnet?.bannerText || '')}</textarea>
+      </div>
+      <div class="form-row"><label>Gift Image</label>
+        <div class="path-row">
+          <input id="lmi-${l}" value="${esc(d.leadMagnet?.image || '')}">
+          <button class="btn-sm" onclick="browseAndUpload('${l}', 'lmi-${l}')">📁 Browse</button>
+          <button class="btn-sm" style="background:#e2e8f0;color:var(--muted)" onclick="openImgModal('${l}', 'lmi-${l}')">🖼 Gallery</button>
+        </div></div>
+      <div class="form-row"><label>Sender.net Embedded Form ID</label>
+        <input id="lmf-${l}" value="${esc(d.leadMagnet?.senderFormId || '')}" placeholder="data-sender-form-id from the Embedded form's code"></div>
+      <div class="ds-sep"></div>
+      <div class="form-row">
+        <label>Direct Sale</label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="dsa-${l}" ${d.direct_sale_active ? 'checked' : ''}
+            style="width:auto" onchange="toggleDirectSale('${l}')">
+          <span style="color:var(--muted);font-size:12px">Sell the ${l.toUpperCase()} edition directly (Creem)</span>
+        </div>
+      </div>
+      <div class="ds-fields${d.direct_sale_active ? '' : ' off'}" id="dsf-${l}">
+        <div class="form-row"><label>Price</label>
+          <input id="dsp-${l}" value="${esc(d.price == null ? '' : String(d.price))}" placeholder="9.99"></div>
+        <div class="form-row"><label>Checkout</label>
+          <input id="dsu-${l}" value="${esc(d.creem_checkout_url || '')}"
+            placeholder="https://www.creem.io/payment/prod_..."></div>
+        <div class="ds-hint">Every language is its own Creem product — paste this edition's own checkout link.</div>
+      </div>
     </div>`;
   }).join('');
 
@@ -657,6 +702,24 @@ function addLinkRow() {
 }
 function removeLinkRow(btn) { btn.closest('.link-row').remove(); }
 
+function toggleDirectSale(lang) {
+  const on = document.getElementById(`dsa-${lang}`).checked;
+  document.getElementById(`dsf-${lang}`).classList.toggle('off', !on);
+}
+
+function deleteBookTranslation(lang) {
+  const id = S.editingBookId;
+  const ref = id ? findBook(id) : null;
+  if (!ref || !ref.book.i18n[lang]) return;
+  if (Object.keys(ref.book.i18n).length <= 1) {
+    toast('This is the only translation left — use "Delete" to remove the whole book instead', 'error');
+    return;
+  }
+  if (!confirm(`Delete the ${lang.toUpperCase()} translation of "${id}"?`)) return;
+  delete ref.book.i18n[lang];
+  saveData(() => { renderBookList(); openBook(id); });
+}
+
 function switchBookLang(lang) {
   S.activeLang = lang;
   document.querySelectorAll('.lang-tab').forEach(b => {
@@ -679,20 +742,65 @@ async function saveBook() {
 
   const wasNew = S.editingIsNew;
 
+  // Direct sale (Creem) — each language edition is its own product
+  const ds = {};
+  for (const l of BOOK_LANGS) {
+    const box = document.getElementById(`dsa-${l}`);
+    if (!box) continue;
+    const active = box.checked;
+    const price  = document.getElementById(`dsp-${l}`).value.trim().replace(',', '.');
+    const url    = document.getElementById(`dsu-${l}`).value.trim();
+    if (!active && !price && !url) continue;
+    const L = l.toUpperCase();
+    if (!document.getElementById(`bt-${l}`)?.value?.trim()) {
+      toast(`${L}: add a title before setting up direct sale`, 'error'); switchBookLang(l); return;
+    }
+    if (price && !/^\d+(\.\d{1,2})?$/.test(price)) {
+      toast(`${L}: price must be a number — e.g. 9.99`, 'error'); switchBookLang(l); return;
+    }
+    if (url && !/^https:\/\//i.test(url)) {
+      toast(`${L}: checkout URL must start with https://`, 'error'); switchBookLang(l); return;
+    }
+    if (active && (!price || !url)) {
+      toast(`${L}: direct sale needs both a price and a checkout URL`, 'error'); switchBookLang(l); return;
+    }
+    ds[l] = { active, price, url };
+  }
+
+  const oldRef = S.editingIsNew ? null : findBook(S.editingBookId || id);
+
   const i18n      = {};
   const textSaves = [];
   for (const l of BOOK_LANGS) {
     const title = document.getElementById(`bt-${l}`)?.value?.trim();
     if (title) {
       i18n[l] = { title };
+      const oldLang = oldRef?.book?.i18n?.[l];
       const genre   = document.getElementById(`bg-${l}`)?.value?.trim();
       const cover   = document.getElementById(`bc-${l}`)?.value?.trim();
       const synTxt  = document.getElementById(`bs-${l}`)?.value?.trim();
       const excTxt  = document.getElementById(`be-${l}`)?.value?.trim();
       if (genre) i18n[l].genre = genre;
       if (cover) i18n[l].cover = cover;
+      const lmEnabled = document.getElementById(`lme-${l}`)?.checked;
+      const lmText    = document.getElementById(`lmt-${l}`)?.value?.trim();
+      const lmImage   = document.getElementById(`lmi-${l}`)?.value?.trim();
+      const lmFormId  = document.getElementById(`lmf-${l}`)?.value?.trim();
+      if (lmEnabled || lmText || lmImage || lmFormId) {
+        i18n[l].leadMagnet = {
+          enabled: !!lmEnabled,
+          bannerText: lmText || '',
+          image: lmImage || '',
+          senderFormId: lmFormId || '',
+        };
+      }
+      if (ds[l]) {
+        i18n[l].direct_sale_active = ds[l].active;
+        if (ds[l].price) i18n[l].price = ds[l].price;
+        if (ds[l].url)   i18n[l].creem_checkout_url = ds[l].url;
+      }
       if (synTxt) {
-        const synPath = `synopsis/${l}/${id}.txt`;
+        const synPath = oldLang?.synopsis || `synopsis/${l}/${id}.txt`;
         i18n[l].synopsis = synPath;
         textSaves.push(api(`/api/content/${synPath}`, {
           method: 'PUT',
@@ -701,7 +809,7 @@ async function saveBook() {
         }));
       }
       if (excTxt) {
-        const excPath = `books/${l}/${id}.md`;
+        const excPath = oldLang?.excerpt || `books/${l}/${id}.md`;
         i18n[l].excerpt = excPath;
         textSaves.push(api(`/api/content/${excPath}`, {
           method: 'PUT',
@@ -728,8 +836,6 @@ async function saveBook() {
   const typeVal = document.getElementById('btype').value;
   let type = typeVal, seriesId = null;
   if (typeVal.startsWith('series:')) { type = 'series'; seriesId = typeVal.slice(7); }
-
-  const oldRef = S.editingIsNew ? null : findBook(S.editingBookId || id);
 
   if (oldRef) {
     replaceBook(S.editingBookId, book, type, seriesId, oldRef);

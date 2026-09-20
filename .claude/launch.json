@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "site",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8040", "--directory", "dist"],
+      "port": 8040
+    },
+    {
+      "name": "admin",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["admin_server.py"],
+      "port": 8050
+    }
+  ]
+}

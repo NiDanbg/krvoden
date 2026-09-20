@@ -97,14 +97,24 @@ def synopsis_html(text):
     return ''.join(f'<p>{_html.escape(l)}</p>' for l in lines)
 
 
+def _is_section_heading(chunk):
+    """A short single line written in capitals is a section heading, not a paragraph."""
+    return chr(10) not in chunk and len(chunk) <= 80 and chunk == chunk.upper()
+
+
 def privacy_html(text):
-    """Matches original renderPrivacyPolicyPage: split on blank lines; first chunk is the title (h1)."""
+    """Legal text pages (privacy policy, terms of service): split on blank lines.
+    First chunk is the title (h1); capitalised one-liners become section headings."""
     if not text:
         return '', ''
     chunks = text.split('\n\n')
     title = chunks[0].strip()
-    body = ''.join(
-        f'<p>{_html.escape(p).replace(chr(10), "<br>")}</p>'
-        for p in (c.strip() for c in chunks[1:]) if p
-    )
-    return title, body
+    parts = []
+    for p in (c.strip() for c in chunks[1:]):
+        if not p:
+            continue
+        if _is_section_heading(p):
+            parts.append(f'<h2>{_html.escape(p)}</h2>')
+        else:
+            parts.append(f'<p>{_html.escape(p).replace(chr(10), "<br>")}</p>')
+    return title, ''.join(parts)

@@ -6,6 +6,7 @@ fully pre-rendered, hash-free static site into dist/.
 
 Usage:  python scripts/build.py
 """
+import hashlib
 import json
 import re
 import shutil
@@ -142,6 +143,82 @@ def iter_all_books(data):
         yield b
 
 
+def search_index(data):
+    """Flat list of every book in every language it exists in - one entry per
+    edition, so a German title leads to the German page. Read by assets/site.js."""
+    entries = []
+
+    def add(book, series_titles=None):
+        for lang, d in sorted(book.get('i18n', {}).items()):
+            if not d.get('title'):
+                continue
+            e = {'t': d['title'], 'l': lang, 'u': R.book_path(book['id'], lang)}
+            if d.get('genre'):
+                e['g'] = d['genre']
+            if d.get('cover'):
+                e['c'] = '/' + d['cover'].lstrip('/')
+            if series_titles:
+                st = series_titles.get(lang) or series_titles.get('en')
+                if st:
+                    e['s'] = st
+            entries.append(e)
+
+    for s in data.get('series', []):
+        titles = {l: v.get('title') for l, v in s.get('i18n', {}).items() if v.get('title')}
+        for b in s.get('books', []):
+            add(b, titles)
+    for b in data.get('novels', []):
+        add(b)
+    for b in data.get('short_stories', []):
+        add(b)
+    return entries
+
+
+def teaser_from(relpath, limit=190):
+    """First sentences of the synopsis, cut at a word boundary."""
+    text = ' '.join(read_text(relpath).split())
+    if len(text) <= limit:
+        return text
+    cut = text[:limit]
+    return cut[:cut.rfind(' ')].rstrip(' ,;:—-') + '…'
+
+
+def store_entries(data):
+    """Every edition the author sells directly, in ALL_LANGS order then by title."""
+    entries = []
+
+    def add(book, series_titles=None):
+        for lang, d in book.get('i18n', {}).items():
+            url = (d.get('creem_checkout_url') or '').strip()
+            price = str(d.get('price') or '').strip()
+            if not d.get('direct_sale_active') or not url or not price:
+                continue
+            entries.append({
+                'id': book['id'],
+                'lang': lang,
+                'title': d.get('title', ''),
+                'cover': d.get('cover'),
+                'genre': d.get('genre'),
+                'series': (series_titles or {}).get(lang) or (series_titles or {}).get('en'),
+                'price': price,
+                'url': url,
+                'teaser': teaser_from(d['synopsis']) if d.get('synopsis') else '',
+                'has_excerpt': bool(d.get('excerpt')),
+            })
+
+    for s in data.get('series', []):
+        titles = {l: v.get('title') for l, v in s.get('i18n', {}).items() if v.get('title')}
+        for b in s.get('books', []):
+            add(b, titles)
+    for b in data.get('novels', []):
+        add(b)
+    for b in data.get('short_stories', []):
+        add(b)
+    entries.sort(key=lambda e: (R.ALL_LANGS.index(e['lang']) if e['lang'] in R.ALL_LANGS else 99,
+                                e.get('series') or '', e['title']))
+    return entries
+
+
 def same_route_switch(path_fn, *args):
     return {'en': path_fn('en', *args), 'bg': path_fn('bg', *args)}
 
@@ -179,13 +256,21 @@ def build():
     data = load_author_data()
     news = load_news()
 
+    # Stamp style.css / site.js with a content hash, so a returning reader
+    # is never left running a cached copy from before the last change.
+    for kind, path in (('css', BASE / 'style.css'), ('js', BASE / 'assets' / 'site.js')):
+        R.ASSET_V[kind] = hashlib.md5(path.read_bytes()).hexdigest()[:8]
+
+    shop = store_entries(data)
+    R.STORE_ACTIVE = bool(shop)
+
     # ---- site-language pages (en / bg) ----
     for ui in UI_LANGS:
         latest_news_html = ''
         if news[ui]:
             latest = news[ui][0]
             latest_news_html = R.render_news_excerpt_block(ui, latest['title'], latest['excerpt'], latest['slug'])
-        body = R.render_homepage(data, ui, latest_news_html)
+        body = R.render_homepage(data, ui, latest_news_html, R.render_store_band(shop, ui))
         write_page(R.home_path(ui), R.layout(
             data, lang=ui, path=R.home_path(ui),
             title=R.site_title(data, ui),
@@ -278,6 +363,25 @@ def build():
             nav_lang_switch=same_route_switch(lambda l: R.privacy_path(l)),
         ), 0.3)
 
+        if shop:
+            write_page(R.store_path(ui), R.layout(
+                data, lang=ui, path=R.store_path(ui),
+                title=f"{R.UI_STRINGS[ui]['store']} | {R.author_name(data, ui)}",
+                description=R.UI_STRINGS[ui]['store_intro'][:160],
+                body_html=R.render_store_page(shop, ui), active_nav_base='store/',
+                nav_lang_switch=same_route_switch(lambda l: R.store_path(l)),
+            ), 0.8)
+
+        title, terms_body = MD.privacy_html(read_text(f'synopsis/{ui}/terms-of-service.txt'))
+        body = R.render_terms_page(ui, title or R.UI_STRINGS[ui]['terms_of_service'], terms_body)
+        write_page(R.terms_path(ui), R.layout(
+            data, lang=ui, path=R.terms_path(ui),
+            title=f"{R.UI_STRINGS[ui]['terms_of_service']} | {R.author_name(data, ui)}",
+            description=R.UI_STRINGS[ui]['terms_of_service'],
+            body_html=body,
+            nav_lang_switch=same_route_switch(lambda l: R.terms_path(l)),
+        ), 0.3)
+
     # ---- content-language pages (book / excerpt) ----
     for book in iter_all_books(data):
         bid = book['id']
@@ -321,6 +425,10 @@ def build():
 
     (DIST / 'assets').mkdir(exist_ok=True)
     shutil.copy2(BASE / 'assets' / 'site.js', DIST / 'assets' / 'site.js')
+
+    (DIST / 'search-index.json').write_text(
+        json.dumps(search_index(data), ensure_ascii=False, separators=(',', ':')),
+        encoding='utf-8')
 
     (DIST / 'CNAME').write_text('krvoden.com\n', encoding='utf-8')
     (DIST / '404.html').write_text(R.layout(

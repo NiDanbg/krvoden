@@ -5,13 +5,26 @@ No DOM, no fetch — every function takes plain data and returns an HTML string.
 import html as _html
 
 BASE_URL = "https://krvoden.com"
+GA_ID = "G-GF28ENCM9M"
+SENDER_ACCOUNT_ID = "ed72b4b7a59839"
+SUPPORT_EMAIL = "contact@krvoden.com"
+
+# Short content hashes for style.css / assets/site.js, filled in by build.py.
+# They ride along as ?v=... so a returning reader never runs a stale script.
+ASSET_V = {'css': '', 'js': ''}
+
+
+def asset_v(kind):
+    return ('?v=' + ASSET_V[kind]) if ASSET_V.get(kind) else ''
+
+
 ALL_LANGS = ['bg', 'en', 'de', 'fr', 'it', 'nl', 'es', 'pt', 'se']
 UI_LANGS = ['en', 'bg']
 
 NAV_LABELS = {
-    'en': [('/', 'Home'), ('library/', 'The Library'), ('news/', 'News'),
+    'en': [('/', 'Home'), ('library/', 'The Library'), ('store/', 'Bookshop'), ('news/', 'News'),
            ('about/', 'About'), ('contact/', 'Contact')],
-    'bg': [('/', 'Начало'), ('library/', 'Библиотека'), ('news/', 'Новини'),
+    'bg': [('/', 'Начало'), ('library/', 'Библиотека'), ('store/', 'Книжарница'), ('news/', 'Новини'),
            ('about/', 'За автора'), ('contact/', 'Контакти')],
 }
 
@@ -46,6 +59,19 @@ UI_STRINGS = {
         'by': 'by',
         'cookie_text': 'We use cookies to enhance your experience and for analytics. By continuing to browse, you agree to our <a href="/privacy-policy/">Privacy Policy</a>.',
         'cookie_accept': 'Accept',
+        'terms_of_service': 'Terms of Service',
+        'customer_support': 'Customer support',
+        'search': 'Search',
+        'store': 'Bookshop',
+        'store_intro': 'These editions come straight from the author, without a middleman. The download link arrives the moment the payment goes through.',
+        'store_note': 'Payment and invoicing are handled by Creem, the Merchant of Record for these orders. Books are delivered as EPUB files. The details are in the {terms}.',
+        'store_heading': 'Buy direct from the author',
+        'store_cta': 'Visit the bookshop',
+        'editions_in': 'Editions in',
+        'read_excerpt_short': 'Read excerpt',
+        'search_placeholder': 'Search for a book…',
+        'search_none': 'Nothing found',
+        'get_gift': 'Get it free',
     },
     'bg': {
         'synopsis_not_available': 'Няма налична анотация.',
@@ -77,8 +103,74 @@ UI_STRINGS = {
         'by': 'от',
         'cookie_text': 'Използваме "бисквитки", за да подобрим вашето преживяване и за анализи. Продължавайки, вие се съгласявате с нашата <a href="/bg/privacy-policy/">Политика за поверителност</a>.',
         'cookie_accept': 'Приемам',
+        'terms_of_service': 'Общи условия',
+        'customer_support': 'Обслужване на клиенти',
+        'search': 'Търсене',
+        'store': 'Книжарница',
+        'store_intro': 'Книги, които се продават направо от автора, без посредник. Линкът за изтегляне идва в мига, в който плащането мине.',
+        'store_note': 'Плащането и фактурите минават през Creem, продавач по договор за тези поръчки. Книгите се доставят във формат EPUB. Подробностите са в {terms}.',
+        'store_heading': 'Купи директно от автора',
+        'store_cta': 'Към книжарницата',
+        'editions_in': 'Издания на',
+        'read_excerpt_short': 'Прочети откъс',
+        'search_placeholder': 'Търсене на книга…',
+        'search_none': 'Няма намерено',
+        'get_gift': 'Вземи безплатно',
     },
 }
+
+
+# Direct-sale button, one label per book language (the chrome stays en/bg, the book does not).
+BUY_DIRECT_LABELS = {
+    'bg': 'Купи директно от автора за {price}',
+    'en': 'Buy direct from the author for {price}',
+    'de': 'Direkt vom Autor kaufen für {price}',
+    'fr': "Acheter directement à l'auteur pour {price}",
+    'it': "Acquista direttamente dall'autore per {price}",
+    'nl': 'Koop rechtstreeks bij de auteur voor {price}',
+    'es': 'Compra directamente al autor por {price}',
+    'pt': 'Compre diretamente ao autor por {price}',
+    'se': 'Köp direkt av författaren för {price}',
+}
+
+# (decimal separator, layout) per language. Prices are in euro; the non-breaking
+# space keeps the amount and the symbol on the same line.
+PRICE_FORMATS = {
+    'bg': (',', '{amount} €'),
+    'en': ('.', '€{amount}'),
+    'de': (',', '{amount} €'),
+    'fr': (',', '{amount} €'),
+    'it': (',', '{amount} €'),
+    'nl': (',', '€ {amount}'),
+    'es': (',', '{amount} €'),
+    'pt': (',', '{amount} €'),
+    'se': (',', '{amount} €'),
+}
+
+# Short form of the same button, for the bookshop rows where the price stands on its own.
+BUY_DIRECT_SHORT = {
+    'bg': 'Купи директно',
+    'en': 'Buy direct',
+    'de': 'Direkt kaufen',
+    'fr': 'Acheter directement',
+    'it': 'Acquista direttamente',
+    'nl': 'Direct kopen',
+    'es': 'Compra directa',
+    'pt': 'Compra direta',
+    'se': 'Köp direkt',
+}
+
+# Names of the book languages, in each of the two chrome languages.
+LANG_NAMES = {
+    'en': {'bg': 'Bulgarian', 'en': 'English', 'de': 'German', 'fr': 'French', 'it': 'Italian',
+           'nl': 'Dutch', 'es': 'Spanish', 'pt': 'Portuguese', 'se': 'Swedish'},
+    'bg': {'bg': 'български', 'en': 'английски', 'de': 'немски', 'fr': 'френски', 'it': 'италиански',
+           'nl': 'нидерландски', 'es': 'испански', 'pt': 'португалски', 'se': 'шведски'},
+}
+
+# Set by build.py: False hides the bookshop from the menu, the footer and the
+# homepage, so nothing ever points at an empty shelf.
+STORE_ACTIVE = False
 
 
 def esc(s):
@@ -134,6 +226,14 @@ def privacy_path(lang):
     return prefix(lang) + '/privacy-policy/'
 
 
+def terms_path(lang):
+    return prefix(lang) + '/terms-of-service/'
+
+
+def store_path(lang):
+    return prefix(lang) + '/store/'
+
+
 def site_title(data, lang):
     ui = ui_lang_of(lang)
     return data['meta'][ui]['siteTitle']
@@ -186,9 +286,13 @@ def layout(data, *, lang, path, title, description, body_html,
 
     nav_items = ''
     for href, label in NAV_LABELS[ui]:
+        if href == 'store/' and not STORE_ACTIVE:
+            continue
         is_active = (href == '/' and active_nav_base == '/') or \
                     (href != '/' and active_nav_base and active_nav_base.startswith(href))
-        nav_items += f'<li class="nav-item"><a href="{root}{href.lstrip("/")}" class="nav-link{" active" if is_active else ""}">{esc(label)}</a></li>'
+        # Language-aware: the BG chrome must stay inside /bg/, not fall back to the EN pages.
+        nav_href = prefix(ui) + '/' + href.lstrip('/')
+        nav_items += f'<li class="nav-item"><a href="{nav_href}" class="nav-link{" active" if is_active else ""}">{esc(label)}</a></li>'
 
     lang_switch_html = ''
     if nav_lang_switch:
@@ -228,7 +332,15 @@ def layout(data, *, lang, path, title, description, body_html,
     <link rel="icon" type="image/png" sizes="16x16" href="{root}images/common/favicons/favicon-16x16.png">
     <link rel="manifest" href="{root}images/common/favicons/site.webmanifest">
 
-    <link rel="stylesheet" href="{root}style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
+    <script>
+       window.dataLayer = window.dataLayer || [];
+       function gtag(){{dataLayer.push(arguments);}}
+       gtag('js', new Date());
+       gtag('config', '{GA_ID}');
+    </script>
+
+    <link rel="stylesheet" href="{root}style.css{asset_v('css')}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -236,8 +348,19 @@ def layout(data, *, lang, path, title, description, body_html,
 <body>
     <header>
         <nav class="navbar">
-            <a href="{root}" class="nav-logo">Karel VODEN</a>
+            <a href="{home_path(ui)}" class="nav-logo">Karel VODEN</a>
             <ul class="nav-menu">{nav_items}</ul>
+            <div class="nav-search">
+                <button type="button" class="search-toggle" aria-label="{esc(strings['search'])}" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+                </button>
+                <div class="search-panel">
+                    <input type="search" class="search-input" autocomplete="off" spellcheck="false"
+                           placeholder="{esc(strings['search_placeholder'])}" aria-label="{esc(strings['search'])}">
+                    <div class="search-results" data-none="{esc(strings['search_none'])}" hidden></div>
+                </div>
+            </div>
             <button class="hamburger" aria-label="Open menu">
                 <span class="bar"></span><span class="bar"></span><span class="bar"></span>
             </button>
@@ -251,11 +374,12 @@ def layout(data, *, lang, path, title, description, body_html,
 
     <footer>
         <div class="container">
-            <p>© 2024 Karel Voden. All rights reserved. | <a href="{root}privacy-policy/">{esc(strings['privacy_policy'])}</a></p>
+            <p>© 2024 Karel Voden. All rights reserved. | <a href="{privacy_path(ui)}">{esc(strings['privacy_policy'])}</a> | <a href="{terms_path(ui)}">{esc(strings['terms_of_service'])}</a>{f' | <a href="{store_path(ui)}">{esc(strings["store"])}</a>' if STORE_ACTIVE else ''}</p>
+            <p class="footer-support">{esc(strings['customer_support'])}: <a href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a></p>
         </div>
     </footer>
 
-    <script src="{root}assets/site.js"></script>
+    <script src="{root}assets/site.js{asset_v('js')}"></script>
 
     <div id="cookie-banner" class="cookie-banner">
         <div class="cookie-content">
@@ -298,7 +422,7 @@ def book_card(book, ui_lang):
 # PAGE BODIES
 # ─────────────────────────────────────────────────────────────────────────
 
-def render_homepage(data, lang, latest_news_html=''):
+def render_homepage(data, lang, latest_news_html='', store_band=''):
     ui = ui_lang_of(lang)
     s = UI_STRINGS[ui]
     meta = data['meta'][ui]
@@ -314,6 +438,7 @@ def render_homepage(data, lang, latest_news_html=''):
             <h2>{esc(s['latest_works'])}</h2>
             <div class="books-grid-featured">{''.join(cards)}</div>
             <div class="all-books-link"><a href="{library_path(lang)}" class="btn">{esc(s['explore_library'])}</a></div>
+            {store_band}
             {latest_news_html}
         </div>"""
     return body
@@ -406,6 +531,8 @@ def render_book_detail(data, book, lang, synopsis_html):
                 <h1>{esc(bdata['title'])}</h1>
                 {f'<p class="book-genre">{esc(bdata["genre"])}</p>' if bdata.get('genre') else ''}
                 <h3>{esc(s['synopsis'])}</h3><div class="synopsis">{synopsis_html}</div>
+                {render_lead_magnet(bdata, lang)}
+                {render_direct_sale(bdata, lang)}
                 <h3>{esc(s['available_on'])}</h3>
                 <div class="buy-links">{buy_html}</div>
             </div>
@@ -422,12 +549,15 @@ def render_excerpt_page(book, lang, excerpt_html):
             <h1 class="preview-title">{esc(s['excerpt_from'])} {esc(bdata['title'])}</h1>
             <a href="{book_path(book['id'], lang)}" class="back-link">← {esc(s['back'])}</a>
             <article class="prose">{excerpt_html}</article>
+            {render_lead_magnet(bdata, lang)}
         </div>"""
     return body
 
 
 def render_news_list_page(lang, articles):
-    """articles: list of dicts {slug, title, date, author, excerpt}, newest first."""
+    """articles: list of dicts {slug, title, date, author, content_html}, newest first.
+    The whole article stands on the list page - a reader should not have to click
+    through to find out whether a piece of news concerns them."""
     ui = ui_lang_of(lang)
     s = UI_STRINGS[ui]
     if not articles:
@@ -438,7 +568,7 @@ def render_news_list_page(lang, articles):
             items += f"""<article class="news-item">
                 <h2><a href="{news_article_path(a['slug'], lang)}" style="color:inherit;text-decoration:none">{esc(a['title'])}</a></h2>
                 <p class="news-meta"><span>{esc(a['date_fmt'])}</span> | <span>{esc(s['by'])} {esc(a['author'])}</span></p>
-                <div class="news-content"><p>{esc(a['excerpt'])}</p></div>
+                <div class="news-content">{a['content_html']}</div>
             </article>"""
     return f"""<div class="container news-page"><h1>{esc(s['news_and_updates'])}</h1><div class="news-list">{items}</div></div>"""
 
@@ -481,6 +611,138 @@ def render_contact_page(lang):
         </form>
         <div id="form-status"></div>
     </div>"""
+
+
+def render_lead_magnet(bdata, lang):
+    """Banner + instant custom modal for a free-gift Sender.net embedded form,
+    shown only if configured for this book+language. Sender.net's script is only
+    loaded on click, and its embedded-form widget renders inside our own modal
+    so opening is instant (no provider trigger delay)."""
+    lm = bdata.get('leadMagnet') or {}
+    if not lm.get('enabled') or not lm.get('senderFormId'):
+        return ''
+    ui = ui_lang_of(lang)
+    cta = UI_STRINGS[ui]['get_gift']
+    img_html = f'<img src="/{esc(lm["image"])}" alt="" class="lead-magnet-img">' if lm.get('image') else ''
+    return f"""
+        <div class="lead-magnet-banner">
+            {img_html}
+            <div class="lead-magnet-body">
+                <p>{esc(lm.get('bannerText', ''))}</p>
+                <button type="button" class="btn lead-magnet-cta" data-account-id="{esc(SENDER_ACCOUNT_ID)}">{esc(cta)}</button>
+            </div>
+        </div>
+        <div class="lead-magnet-modal">
+            <div class="lead-magnet-modal-inner">
+                <button type="button" class="lead-magnet-modal-close" aria-label="Close">&times;</button>
+                <div class="sender-form-field" data-sender-form-id="{esc(lm['senderFormId'])}"></div>
+            </div>
+        </div>"""
+
+
+def format_price(price, lang):
+    """Price as the reader of that language writes it. Anything that is not a
+    number is printed exactly as typed in the admin panel."""
+    sep, template = PRICE_FORMATS.get(lang, PRICE_FORMATS['en'])
+    raw = str(price or '').strip()
+    try:
+        amount = f'{float(raw.replace(",", ".")):.2f}'
+    except ValueError:
+        return raw
+    return template.format(amount=amount.replace('.', sep))
+
+
+def render_direct_sale(bdata, lang):
+    """Checkout button for this language edition, sold by the author through Creem.
+    Every translation is its own product, so price and link come from i18n[lang].
+    The label speaks the language of the book, not of the surrounding chrome."""
+    if not bdata.get('direct_sale_active'):
+        return ''
+    url = (bdata.get('creem_checkout_url') or '').strip()
+    price = str(bdata.get('price') or '').strip()
+    if not url or not price:
+        return ''
+    label = BUY_DIRECT_LABELS.get(lang, BUY_DIRECT_LABELS['en']).format(
+        price=format_price(price, lang))
+    return f"""
+        <div class="direct-sale">
+            <a href="{esc(url)}" class="direct-sale-btn" target="_blank" rel="noopener">{esc(label)}</a>
+        </div>"""
+
+
+def store_row(entry, ui):
+    """One purchasable edition: cover, what it is, and the way to buy it."""
+    lang = entry['lang']
+    book_url = book_path(entry['id'], lang)
+    cover = entry.get('cover') or 'images/common/cover-placeholder.jpg'
+    overline = ' · '.join(filter(None, [entry.get('series'), LANG_NAMES[ui].get(lang, lang.upper())]))
+    genre = f'<p class="store-genre">{esc(entry["genre"])}</p>' if entry.get('genre') else ''
+    teaser = f'<p class="store-teaser">{esc(entry["teaser"])}</p>' if entry.get('teaser') else ''
+    excerpt = (f'<a class="store-excerpt" href="{excerpt_path(entry["id"], lang)}">'
+               f'{esc(UI_STRINGS[ui]["read_excerpt_short"])}</a>') if entry.get('has_excerpt') else ''
+    return f"""
+            <article class="store-item">
+                <a class="store-cover" href="{book_url}"><img src="/{esc(cover)}" alt="{esc(entry['title'])}" loading="lazy"></a>
+                <div class="store-body">
+                    <p class="store-overline">{esc(overline)}</p>
+                    <h3 class="store-title"><a href="{book_url}">{esc(entry['title'])}</a></h3>
+                    {genre}
+                    {teaser}
+                </div>
+                <div class="store-buy">
+                    <span class="store-price">{esc(format_price(entry['price'], lang))}</span>
+                    <a class="direct-sale-btn" href="{esc(entry['url'])}" target="_blank" rel="noopener">{esc(BUY_DIRECT_SHORT[ui])}</a>
+                    {excerpt}
+                </div>
+            </article>"""
+
+
+def render_store_page(entries, lang):
+    """The bookshop: every edition the author sells directly, grouped by language
+    only once there is more than one - a lone section heading looks like a mistake."""
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    langs = [l for l in ALL_LANGS if any(e['lang'] == l for e in entries)]
+    sections = []
+    for l in langs:
+        rows = ''.join(store_row(e, ui) for e in entries if e['lang'] == l)
+        head = (f'<h2 class="store-lang-head">{esc(s["editions_in"])} {esc(LANG_NAMES[ui][l])}</h2>'
+                if len(langs) > 1 else '')
+        sections.append(head + f'<div class="store-list">{rows}</div>')
+    terms_link = f'<a href="{terms_path(ui)}">{esc(s["terms_of_service"])}</a>'
+    note = esc(s['store_note']).replace('{terms}', terms_link)
+    return f"""
+        <div class="container store-page">
+            <h1>{esc(s['store'])}</h1>
+            <p class="store-intro">{esc(s['store_intro'])}</p>
+            {''.join(sections)}
+            <p class="store-note">{note}</p>
+        </div>"""
+
+
+def render_store_band(entries, lang):
+    """Homepage strip pointing at the bookshop. Silent when nothing is on sale."""
+    if not entries:
+        return ''
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    covers = ''.join(
+        f'<img src="/{esc(e.get("cover") or "images/common/cover-placeholder.jpg")}" alt="{esc(e["title"])}" loading="lazy">'
+        for e in entries[:3]
+    )
+    return f"""
+        <section class="store-band">
+            <div class="store-band-covers">{covers}</div>
+            <div class="store-band-text">
+                <h2>{esc(s['store_heading'])}</h2>
+                <p>{esc(s['store_intro'])}</p>
+                <a class="direct-sale-btn" href="{store_path(ui)}">{esc(s['store_cta'])}</a>
+            </div>
+        </section>"""
+
+
+def render_terms_page(lang, title, body_html):
+    return f'<div class="container text-page"><h1>{esc(title)}</h1>{body_html}</div>'
 
 
 def render_privacy_page(lang, title, body_html):
