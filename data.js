@@ -20,141 +20,6 @@ const authorData = {
         {
             "i18n": {
                 "bg": {
-                    "cover": "images/bg/Cover-gnostichnia-shifar-_bg.webp",
-                    "excerpt": "books/bg/gnostichnia-shifar.md",
-                    "genre": "Исторически Техно-трилър, Конспиративен трилър",
-                    "synopsis": "synopsis/bg/gnostichnia-shifar.txt",
-                    "title": "Гностичният Шифър"
-                },
-                "de": {
-                    "cover": "images/de/die-gnostische-chiffre.webp",
-                    "excerpt": "books/de/gnostichnia-shifar.md",
-                    "genre": "Techno-Thriller, Verschwörungsthriller",
-                    "synopsis": "synopsis/de/gnostichnia-shifar.txt",
-                    "title": "Die Gnostische Chiffre"
-                },
-                "en": {
-                    "cover": "images/en/the-gnostic-cipher.webp",
-                    "excerpt": "books/en/gnostichnia-shifar.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/en/gnostichnia-shifar.txt",
-                    "title": "The Gnostic Cipher"
-                },
-                "es": {
-                    "cover": "images/es/Cover-El_Codigo_Gnostico_-el-_ES.webp",
-                    "excerpt": "books/es/gnostichnia-shifar.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/es/gnostichnia-shifar.txt",
-                    "title": "El Código Gnóstico"
-                },
-                "fr": {
-                    "cover": "images/fr/le-chiffre-gnostique.webp",
-                    "excerpt": "books/fr/gnostichnia-shifar.md",
-                    "genre": "Techno-thriller, Thriller conspirationniste",
-                    "synopsis": "synopsis/fr/gnostichnia-shifar.txt",
-                    "title": "Le Chiffre Gnostique"
-                },
-                "it": {
-                    "cover": "images/it/il-codice-gnostico.webp",
-                    "excerpt": "books/it/gnostichnia-shifar.md",
-                    "genre": "Techno-thriller, Thriller cospirativo",
-                    "synopsis": "synopsis/it/gnostichnia-shifar.txt",
-                    "title": "Il Codice Gnostico"
-                },
-                "nl": {
-                    "cover": "images/nl/Cover-De_Gnostische_Code_-el-_NL.webp",
-                    "excerpt": "books/nl/gnostichnia-shifar.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/nl/gnostichnia-shifar.txt",
-                    "title": "De Gnostische Code"
-                },
-                "pt": {
-                    "cover": "images/pt/Cover-O_Codigo_Gnostico_-el-_PT.webp",
-                    "excerpt": "books/pt/gnostichnia-shifar.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/pt/gnostichnia-shifar.txt",
-                    "title": "O Código Gnóstico"
-                },
-                "se": {
-                    "cover": "images/se/den-gnostiska-koden.webp",
-                    "excerpt": "books/se/gnostichnia-shifar.md",
-                    "genre": "Techno-Thriller, Global Conspiracy",
-                    "synopsis": "synopsis/se/gnostichnia-shifar.txt",
-                    "title": "Den Gnostiska koden"
-                }
-            },
-            "id": "gnostichnia-shifar",
-            "links": [
-                {
-                    "lang": "EN",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.com/dp/B0FXVWT2LV"
-                },
-                {
-                    "lang": "DE",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.de/dp/B0G5QTNHJ2"
-                },
-                {
-                    "lang": "IT",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.it/dp/B0G64C5L92"
-                },
-                {
-                    "lang": "FR",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.fr/dp/B0G6789BXV"
-                },
-                {
-                    "lang": "SE",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.com/dp/B0G6D42JBD"
-                },
-                {
-                    "lang": "NL",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.nl/dp/B0G82Y59S7"
-                },
-                {
-                    "lang": "NL",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/3nlDAo"
-                },
-                {
-                    "lang": "ES",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.es/dp/B0G7ZWMZ18"
-                },
-                {
-                    "lang": "ES",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/m2GQyk"
-                },
-                {
-                    "lang": "PT",
-                    "platform": "Amazon",
-                    "url": "https://www.amazon.es/dp/B0G8423D25"
-                },
-                {
-                    "lang": "PT",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/bplyo6"
-                },
-                {
-                    "lang": "SE",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/mvDOvV"
-                },
-                {
-                    "lang": "BG",
-                    "platform": "Draft2Digital",
-                    "url": "https://books2read.com/u/boG6xZ"
-                }
-            ]
-        },
-        {
-            "i18n": {
-                "bg": {
                     "cover": "images/bg/Cover-dyrvoto-na-syznanieto-BG.webp",
                     "excerpt": "books/bg/dyrvoto-na-syznanieto.md",
                     "genre": "Трилър, Конспиративен трилър",
@@ -611,76 +476,214 @@ const authorData = {
                     "url": "https://books2read.com/u/3kErGO"
                 }
             ]
+        },
+        {
+            "id": "gnostichnia-shifar",
+            "i18n": {
+                "bg": {
+                    "title": "Гностичният Шифър",
+                    "genre": "Исторически Техно-трилър, Конспиративен трилър",
+                    "cover": "images/bg/Cover-gnostichnia-shifar-_bg.webp",
+                    "direct_sale_active": true,
+                    "price": "4",
+                    "creem_checkout_url": "https://www.creem.io/payment/prod_16HmCUnWEtc5VR6BJpUdAb",
+                    "synopsis": "synopsis/bg/gnostichnia-shifar.txt",
+                    "excerpt": "books/bg/gnostichnia-shifar.md"
+                },
+                "en": {
+                    "title": "The Gnostic Cipher",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/en/the-gnostic-cipher.webp",
+                    "synopsis": "synopsis/en/gnostichnia-shifar.txt",
+                    "excerpt": "books/en/gnostichnia-shifar.md"
+                },
+                "de": {
+                    "title": "Die Gnostische Chiffre",
+                    "genre": "Techno-Thriller, Verschwörungsthriller",
+                    "cover": "images/de/die-gnostische-chiffre.webp",
+                    "synopsis": "synopsis/de/gnostichnia-shifar.txt",
+                    "excerpt": "books/de/gnostichnia-shifar.md"
+                },
+                "fr": {
+                    "title": "Le Chiffre Gnostique",
+                    "genre": "Techno-thriller, Thriller conspirationniste",
+                    "cover": "images/fr/le-chiffre-gnostique.webp",
+                    "synopsis": "synopsis/fr/gnostichnia-shifar.txt",
+                    "excerpt": "books/fr/gnostichnia-shifar.md"
+                },
+                "it": {
+                    "title": "Il Codice Gnostico",
+                    "genre": "Techno-thriller, Thriller cospirativo",
+                    "cover": "images/it/il-codice-gnostico.webp",
+                    "synopsis": "synopsis/it/gnostichnia-shifar.txt",
+                    "excerpt": "books/it/gnostichnia-shifar.md"
+                },
+                "nl": {
+                    "title": "De Gnostische Code",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/nl/Cover-De_Gnostische_Code_-el-_NL.webp",
+                    "synopsis": "synopsis/nl/gnostichnia-shifar.txt",
+                    "excerpt": "books/nl/gnostichnia-shifar.md"
+                },
+                "es": {
+                    "title": "El Código Gnóstico",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/es/Cover-El_Codigo_Gnostico_-el-_ES.webp",
+                    "synopsis": "synopsis/es/gnostichnia-shifar.txt",
+                    "excerpt": "books/es/gnostichnia-shifar.md"
+                },
+                "pt": {
+                    "title": "O Código Gnóstico",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/pt/Cover-O_Codigo_Gnostico_-el-_PT.webp",
+                    "synopsis": "synopsis/pt/gnostichnia-shifar.txt",
+                    "excerpt": "books/pt/gnostichnia-shifar.md"
+                },
+                "se": {
+                    "title": "Den Gnostiska koden",
+                    "genre": "Techno-Thriller, Global Conspiracy",
+                    "cover": "images/se/den-gnostiska-koden.webp",
+                    "synopsis": "synopsis/se/gnostichnia-shifar.txt",
+                    "excerpt": "books/se/gnostichnia-shifar.md"
+                }
+            },
+            "links": [
+                {
+                    "platform": "Amazon",
+                    "lang": "EN",
+                    "url": "https://www.amazon.com/dp/B0FXVWT2LV"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "DE",
+                    "url": "https://www.amazon.de/dp/B0G5QTNHJ2"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "IT",
+                    "url": "https://www.amazon.it/dp/B0G64C5L92"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "FR",
+                    "url": "https://www.amazon.fr/dp/B0G6789BXV"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "SE",
+                    "url": "https://www.amazon.com/dp/B0G6D42JBD"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "NL",
+                    "url": "https://www.amazon.nl/dp/B0G82Y59S7"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "NL",
+                    "url": "https://books2read.com/u/3nlDAo"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "ES",
+                    "url": "https://www.amazon.es/dp/B0G7ZWMZ18"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "ES",
+                    "url": "https://books2read.com/u/m2GQyk"
+                },
+                {
+                    "platform": "Amazon",
+                    "lang": "PT",
+                    "url": "https://www.amazon.es/dp/B0G8423D25"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "PT",
+                    "url": "https://books2read.com/u/bplyo6"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "SE",
+                    "url": "https://books2read.com/u/mvDOvV"
+                },
+                {
+                    "platform": "Draft2Digital",
+                    "lang": "BG",
+                    "url": "https://books2read.com/u/boG6xZ"
+                }
+            ]
         }
     ],
     "series": [
         {
-            "id": "the-beyond-the-petrohan-Files",
-            "i18n": {
-                "bg": {
-                    "title": "Отвъд досиетата Петрохан",
-                    "series_synopsis": "Поредицата „Отвъд досиетата Петрохан“ е амбициозно художествено произведение, което съчетава криминално разследване, психологическо напрежение и политическа интрига. Вдъхновена от реални събития, личности и обществени процеси от най-новата история на Балканите, поредицата създава своя собствена история отвъд официалните версии за миналото — един свят на тайни, власт, предателства и скрити връзки.\nМакар че поредицата черпи вдъхновение от реалната история и атмосферата на епохата, тя е художествено произведение. Сюжетите, героите, действията и взаимоотношенията са плод на въображението на автора и нямат за цел да бъдат документално пресъздаване на действителни събития или лица.“"
-                },
-                "en": {
-                    "title": "The Beyond the Petrohan Files",
-                    "series_synopsis": "The Beyond the Petrohan Files is an ambitious work of fiction that combines criminal investigation, psychological suspense, and political intrigue. Inspired by real events, figures, and social developments from the recent history of the Balkans, the series creates its own story beyond the official versions of the past — a world of secrets, power, betrayal, and hidden connections.\n\nAlthough the series draws inspiration from real history and the atmosphere of the era, it is a work of fiction. The plots, characters, actions, and relationships are products of the author’s imagination and are not intended to be a documentary representation of actual events or individuals."
-                }
-            },
-            "seriesImage": "",
             "books": [
                 {
-                    "id": "square-knot",
                     "i18n": {
                         "bg": {
-                            "title": "Квадратен възел",
-                            "genre": "Balkan noir / FICTION / Thrillers / Political",
                             "cover": "images/bg/---5.58.5.webp",
+                            "excerpt": "books/bg/square-knot.md",
+                            "genre": "Balkan noir / FICTION / Thrillers / Political",
                             "published": "2026",
                             "synopsis": "synopsis/bg/square-knot.txt",
-                            "excerpt": "books/bg/square-knot.md"
-                        },
-                        "en": {
-                            "title": "Square Knot",
-                            "genre": "Balkan noir / FICTION / Thrillers / Political",
-                            "cover": "images/en/Square-Knot-EN_.webp",
-                            "published": "2026",
-                            "synopsis": "synopsis/en/square-knot.txt",
-                            "excerpt": "books/en/square-knot.md"
+                            "title": "Квадратен възел"
                         },
                         "de": {
-                            "title": "Kreuzknoten",
-                            "genre": "Balkan noir / FICTION / Thrillers / Political",
                             "cover": "images/de/KREUZKNOTEN-DE.webp",
+                            "excerpt": "books/de/square-knot.md",
+                            "genre": "Balkan noir / FICTION / Thrillers / Political",
                             "published": "2026",
                             "synopsis": "synopsis/de/square-knot.txt",
-                            "excerpt": "books/de/square-knot.md"
+                            "title": "Kreuzknoten"
+                        },
+                        "en": {
+                            "cover": "images/en/Square-Knot-EN_.webp",
+                            "excerpt": "books/en/square-knot.md",
+                            "genre": "Balkan noir / FICTION / Thrillers / Political",
+                            "published": "2026",
+                            "synopsis": "synopsis/en/square-knot.txt",
+                            "title": "Square Knot"
                         }
                     },
+                    "id": "square-knot",
                     "links": [
                         {
-                            "platform": "Laterpress",
                             "lang": "BG",
+                            "platform": "Laterpress",
                             "url": "https://eurotvshop.bg/produkt/kvadraten-vazel-karel-voden/"
                         },
                         {
-                            "platform": "Draft2Digital",
                             "lang": "EN",
+                            "platform": "Draft2Digital",
                             "url": "https://books2read.com/u/bOB2Bo"
                         },
                         {
-                            "platform": "Draft2Digital",
                             "lang": "DE",
+                            "platform": "Draft2Digital",
                             "url": "https://books2read.com/u/mgAVZz"
                         },
                         {
-                            "platform": "Amazon",
                             "lang": "EN",
+                            "platform": "Amazon",
                             "url": "https://www.amazon.com/dp/B0HHB25J99"
                         }
                     ],
                     "position": 1
                 }
-            ]
+            ],
+            "i18n": {
+                "bg": {
+                    "series_synopsis": "Поредицата „Отвъд досиетата Петрохан“ е амбициозно художествено произведение, което съчетава криминално разследване, психологическо напрежение и политическа интрига. Вдъхновена от реални събития, личности и обществени процеси от най-новата история на Балканите, поредицата създава своя собствена история отвъд официалните версии за миналото — един свят на тайни, власт, предателства и скрити връзки.\nМакар че поредицата черпи вдъхновение от реалната история и атмосферата на епохата, тя е художествено произведение. Сюжетите, героите, действията и взаимоотношенията са плод на въображението на автора и нямат за цел да бъдат документално пресъздаване на действителни събития или лица.“",
+                    "title": "Отвъд досиетата Петрохан"
+                },
+                "en": {
+                    "series_synopsis": "The Beyond the Petrohan Files is an ambitious work of fiction that combines criminal investigation, psychological suspense, and political intrigue. Inspired by real events, figures, and social developments from the recent history of the Balkans, the series creates its own story beyond the official versions of the past — a world of secrets, power, betrayal, and hidden connections.\n\nAlthough the series draws inspiration from real history and the atmosphere of the era, it is a work of fiction. The plots, characters, actions, and relationships are products of the author’s imagination and are not intended to be a documentary representation of actual events or individuals.",
+                    "title": "The Beyond the Petrohan Files"
+                }
+            },
+            "id": "the-beyond-the-petrohan-Files",
+            "seriesImage": ""
         }
     ],
     "short_stories": []

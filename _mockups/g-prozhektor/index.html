@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karel Voden | Author</title>
+<script>
+  document.documentElement.classList.add('js');
+  try { if (sessionStorage.getItem('pz-intro') === '1') document.documentElement.classList.add('seen'); else sessionStorage.setItem('pz-intro', '1'); } catch (e) {}
+  setTimeout(function () { if (!window.gsap) document.documentElement.classList.add('no-anim'); }, 5000);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+</head>
+<body data-page="home">
+
+<div class="intro" aria-hidden="true"><span>Karel Voden</span></div>
+<div data-nav-sentinel style="position:absolute;top:0;left:0;width:1px;height:80px;pointer-events:none"></div>
+
+<header>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html" data-page="index.html" class="nav-logo">Karel <b>Voden</b></a>
+    <ul class="nav-menu">
+      <li><a href="index.html" data-page="index.html" class="nav-link active" data-i="nav.home">Home</a></li>
+      <li><a href="#library" class="nav-link" data-i="nav.library">The Library</a></li>
+      <li><a href="#" class="nav-link" data-i="nav.store">Bookshop</a></li>
+      <li><a href="#news" class="nav-link" data-i="nav.news">News</a></li>
+      <li><a href="#about" class="nav-link" data-i="nav.about">About</a></li>
+      <li><a href="#footer" class="nav-link" data-i="nav.contact">Contact</a></li>
+    </ul>
+    <div class="nav-tools">
+      <button type="button" class="icon-btn search-toggle" aria-label="Search" data-i-attr="aria-label:search.label">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      </button>
+      <div class="lang-switcher"></div>
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false" data-i-attr="aria-label:menu.open"><span class="bar"></span><span class="bar"></span></button>
+    </div>
+  </nav>
+</header>
+
+<div class="menu-overlay" aria-label="Menu">
+  <a href="index.html" data-page="index.html" data-i="nav.home">Home</a>
+  <a href="#library" data-i="nav.library">The Library</a>
+  <a href="#" data-i="nav.store">Bookshop</a>
+  <a href="#news" data-i="nav.news">News</a>
+  <a href="#about" data-i="nav.about">About</a>
+  <a href="#footer" data-i="nav.contact">Contact</a>
+</div>
+
+<div class="search-overlay" role="dialog" aria-modal="true" aria-label="Search" data-i-attr="aria-label:search.label">
+  <button type="button" class="icon-btn close" aria-label="Close" data-i-attr="aria-label:close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+  <input type="search" class="search-input" placeholder="Search for a book…" aria-label="Search" autocomplete="off" spellcheck="false" data-i-attr="placeholder:search.ph;aria-label:search.label">
+  <div class="search-results" hidden></div>
+</div>
+
+<main id="main-content">
+
+  <!-- ЕКРАН: кинематографична сцена. Тук може да влезе видео: <video> вместо .plate. -->
+  <section class="hero" aria-label="Featured titles">
+    <h1 class="sr" data-i="h1">Karel Voden, author of thrillers</h1>
+
+    <article class="scene is-active" style="--tint:70,178,214" data-tint="70,178,214">
+      <div class="plate-wrap"><div class="plate tuzo"></div></div>
+      <div class="grade"></div>
+      <div class="fogs"><div class="fog a"></div><div class="fog b"></div></div>
+      <div class="beam"></div>
+      <div class="copy">
+        <p class="billing label brass">Karel Voden</p>
+        <h2 class="h-title" data-i="t.tuzo">The Tuzo Anomaly</h2>
+        <p class="tagline" data-i="hero.tuzo.tag">A flawed diagnosis could kill the planet.</p>
+        <div class="cta">
+          <a class="btn" href="kniga.html" data-page="kniga.html"><span data-i="cta.book">View the book</span></a>
+          <a class="link" href="#"><span data-i="cta.excerpt">Read excerpt</span><i></i></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="scene" style="--tint:200,80,58" data-tint="200,80,58">
+      <div class="plate-wrap"><div class="plate knot"></div></div>
+      <div class="grade"></div>
+      <div class="fogs"><div class="fog a"></div><div class="fog b"></div></div>
+      <div class="beam"></div>
+      <div class="copy">
+        <p class="billing label brass">Karel Voden</p>
+        <h2 class="h-title" data-i="t.knot">Square Knot</h2>
+        <p class="tagline" data-i="hero.knot.tag">Some secrets are tied tight. Until you pull the wrong end.</p>
+        <div class="cta">
+          <a class="btn" href="#"><span data-i="cta.book">View the book</span></a>
+          <a class="link" href="#excerpt"><span data-i="cta.excerpt">Read excerpt</span><i></i></a>
+        </div>
+      </div>
+    </article>
+
+    <canvas class="dust" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="chapters">
+      <button type="button" class="chap is-active"><img src="../../images/en/the-tuzo-anomaly.webp" data-bg-src="../../images/bg/Anomaliata-Tuzo-BG.webp" alt=""><span><span class="nm" data-i="t.tuzo">The Tuzo Anomaly</span><span class="bar"><i></i></span></span></button>
+      <button type="button" class="chap"><img src="../../images/en/Square-Knot-EN_.webp" data-bg-src="../../images/bg/---5.58.5.webp" alt=""><span><span class="nm" data-i="t.knot">Square Knot</span><span class="bar"><i></i></span></span></button>
+    </div>
+  </section>
+
+  <!-- ЖАНРОВА ЛЕНТА -->
+  <section class="marquee" aria-label="Genres">
+    <div class="track"><div class="grp">
+      <span class="t" data-i="gen.1">Techno-Thriller</span><span class="s"></span>
+      <span class="t" data-i="gen.3">Balkan Noir</span><span class="s"></span>
+      <span class="t" data-i="gen.4">Global Conspiracy</span><span class="s"></span>
+      <span class="t" data-i="gen.5">Historical Technothriller</span><span class="s"></span>
+    </div></div>
+  </section>
+
+  <!-- МАНИФЕСТ -->
+  <section class="manifesto" id="about">
+    <div class="wrap">
+      <p class="big" data-words data-i="man.text">Karel Voden writes taut, intelligent thrillers that weave ancient mysteries with modern conspiracies. His stories take readers from the shadowed corridors of power to the edge of what humanity dares to know.</p>
+      <a class="link" href="#" data-reveal><span data-i="man.more">Learn more...</span><i></i></a>
+    </div>
+  </section>
+
+  <!-- НАЙ-НОВИ ТВОРБИ: лепкаво подреждане -->
+  <section class="stories" id="latest">
+    <article class="story" style="--tint:70,178,214;--gx:26%">
+      <h2 class="label sec" data-i="latest">Latest Works</h2>
+      <div class="inner">
+        <div class="obj"><a class="book3d" data-tilt="11" href="kniga.html" data-page="kniga.html"><img src="../../images/en/the-tuzo-anomaly.webp" data-bg-src="../../images/bg/Anomaliata-Tuzo-BG.webp" alt="Cover of The Tuzo Anomaly"></a></div>
+        <div class="txt">
+          <span class="label brass" data-i="g.tuzo">A Techno-Apocalyptic Thriller</span>
+          <h3 data-i="t.tuzo">The Tuzo Anomaly</h3>
+          <p class="quote" data-i="s1.quote">The General's strike won't save humanity. It will stop the Earth's heart forever.</p>
+          <p class="pitch" data-i="s1.pitch">Global communications are dead. Satellites are falling from orbit. Lethal auroras blaze above the equator.</p>
+          <div class="chips"><a class="chip static" href="#">BG</a><a class="chip static" href="#">DE</a><a class="chip static" href="#">EN</a><a class="chip static" href="#">ES</a><a class="chip static" href="#">FR</a><a class="chip static" href="#">IT</a><a class="chip static" href="#">NL</a><a class="chip static" href="#">PT</a><a class="chip static" href="#">SE</a></div>
+          <div class="cta"><a class="btn" href="kniga.html" data-page="kniga.html"><span data-i="cta.book">View the book</span></a><a class="link" href="#"><span data-i="cta.excerpt">Read excerpt</span><i></i></a></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="story flip" style="--tint:200,80,58;--gx:74%">
+      <div class="inner">
+        <div class="obj"><a class="book3d" data-tilt="11" href="#"><img src="../../images/en/Square-Knot-EN_.webp" data-bg-src="../../images/bg/---5.58.5.webp" alt="Cover of Square Knot"></a></div>
+        <div class="txt">
+          <span class="label brass" data-i="g.knot">Balkan noir</span>
+          <h3 data-i="t.knot">Square Knot</h3>
+          <p class="quote" data-i="s2.quote">Six bodies in the mountains. A boy who knows too much.</p>
+          <p class="pitch" data-i="s2.pitch">High in the frozen peaks of the Balkan Mountains, six bodies are discovered. The police are quick to provide a convenient explanation: a mass ritual suicide.</p>
+          <div class="chips"><a class="chip static" href="#">BG</a><a class="chip static" href="#">EN</a><a class="chip static" href="#">DE</a></div>
+          <div class="cta"><a class="btn" href="#"><span data-i="cta.book">View the book</span></a><a class="link" href="#excerpt"><span data-i="cta.excerpt">Read excerpt</span><i></i></a></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ОТКЪС -->
+  <section class="excerpt" id="excerpt">
+    <div class="wrap">
+      <span class="label brass" data-i="exc.label">From “Square Knot”</span>
+      <p class="big" data-words data-i="exc.text">The bell shattered the silence, and dozens of doors swung open with a crash. In the third-floor corridor, the scent of expensive perfume mixed with disinfectant.</p>
+      <a class="link" href="#" data-reveal><span data-i="cta.excerpt">Read excerpt</span><i></i></a>
+    </div>
+  </section>
+
+  <!-- ПОРЕДИЦА: хоризонтален ход -->
+  <section class="series" id="series">
+    <div class="h-track">
+      <div class="panel intro-p">
+        <h2 data-i="ser.title">The Beyond the Petrohan Files</h2>
+        <p data-i="ser.text">The Beyond the Petrohan Files is an ambitious work of fiction that combines criminal investigation, psychological suspense, and political intrigue.</p>
+        <div><a class="link" href="#"><span data-i="ser.more">Explore the Series</span><i></i></a></div>
+      </div>
+      <div class="panel vol">
+        <a class="book3d" data-tilt="9" href="#"><img src="../../images/en/Square-Knot-EN_.webp" data-bg-src="../../images/bg/---5.58.5.webp" alt="Cover of Square Knot"></a>
+        <div>
+          <span class="label brass" data-i="ser.b1">Book one</span>
+          <h3 data-i="t.knot">Square Knot</h3>
+          <div class="cta"><a class="btn" href="#"><span data-i="cta.book">View the book</span></a></div>
+        </div>
+      </div>
+      <div class="panel soon"><div class="frame"></div><span class="label" data-i="ser.b2">Book two</span><h3 data-i="ser.soon">Coming soon</h3></div>
+      <div class="panel soon"><div class="frame"></div><span class="label" data-i="ser.b3">Book three</span><h3 data-i="ser.soon">Coming soon</h3></div>
+      <div class="panel end"></div>
+    </div>
+    <div class="prog"><i></i></div>
+  </section>
+
+  <!-- БИБЛИОТЕКА -->
+  <section class="library" id="library">
+    <div class="wrap">
+      <div class="lib-head">
+        <h2 data-i="lib.title">The Library</h2>
+        <div class="chips" role="group" aria-label="Genre">
+          <button type="button" class="chip on" data-f="all" data-i="lib.all">All</button>
+          <button type="button" class="chip" data-f="techno" data-i="lib.techno">Techno-Thriller</button>
+          <button type="button" class="chip" data-f="conspiracy" data-i="lib.conspiracy">Conspiracy</button>
+          <button type="button" class="chip" data-f="noir" data-i="lib.noir">Balkan noir</button>
+        </div>
+      </div>
+      <div class="lib-grid">
+        <a class="card" href="#" data-g="techno conspiracy" data-reveal>
+          <div class="cv" data-tilt="6"><img src="../../images/en/the-gnostic-cipher.webp" data-bg-src="../../images/bg/Cover-gnostichnia-shifar-_bg.webp" alt="Cover of The Gnostic Cipher" loading="lazy"></div>
+          <h3 data-i="t.cipher">The Gnostic Cipher</h3><span class="g" data-i="g.cipher">Techno-Thriller, Global Conspiracy</span>
+          <div class="chips"><span class="chip">BG</span><span class="chip">EN</span><span class="chip">DE</span><span class="chip">FR</span><span class="chip">+5</span></div>
+        </a>
+        <a class="card" href="#" data-g="techno conspiracy" data-reveal style="--d:.1s">
+          <div class="cv" data-tilt="6"><img src="../../images/en/the-tree-of-consciousness.webp" data-bg-src="../../images/bg/Cover-dyrvoto-na-syznanieto-BG.webp" alt="Cover of The Tree of Consciousness" loading="lazy"></div>
+          <h3 data-i="t.tree">The Tree of Consciousness</h3><span class="g" data-i="g.tree">Techno-Thriller, Global Conspiracy</span>
+          <div class="chips"><span class="chip">BG</span><span class="chip">EN</span><span class="chip">FR</span><span class="chip">+6</span></div>
+        </a>
+        <a class="card" href="#" data-g="conspiracy" data-reveal style="--d:.2s">
+          <div class="cv" data-tilt="6"><img src="../../images/en/The_Seed_of_Eden.webp" data-bg-src="../../images/bg/SEmeto-na-edem-bg.webp" alt="Cover of The Seed of Eden" loading="lazy"></div>
+          <h3 data-i="t.seed">The Seed of Eden</h3><span class="g" data-i="g.seed">Sci-fi conspiracy thriller</span>
+          <div class="chips"><span class="chip">BG</span><span class="chip">EN</span><span class="chip">ES</span><span class="chip">+6</span></div>
+        </a>
+        <a class="card" href="kniga.html" data-page="kniga.html" data-g="techno" data-reveal>
+          <div class="cv" data-tilt="6"><img src="../../images/en/the-tuzo-anomaly.webp" data-bg-src="../../images/bg/Anomaliata-Tuzo-BG.webp" alt="Cover of The Tuzo Anomaly" loading="lazy"></div>
+          <h3 data-i="t.tuzo">The Tuzo Anomaly</h3><span class="g" data-i="g.tuzo">A Techno-Apocalyptic Thriller</span>
+          <div class="chips"><span class="chip">BG</span><span class="chip">EN</span><span class="chip">IT</span><span class="chip">+6</span></div>
+        </a>
+        <a class="card" href="#" data-g="noir" data-reveal style="--d:.1s">
+          <div class="cv" data-tilt="6"><img src="../../images/en/Square-Knot-EN_.webp" data-bg-src="../../images/bg/---5.58.5.webp" alt="Cover of Square Knot" loading="lazy"></div>
+          <h3 data-i="t.knot">Square Knot</h3><span class="g" data-i="g.knot">Balkan noir</span>
+          <div class="chips"><span class="chip">BG</span><span class="chip">EN</span><span class="chip">DE</span></div>
+        </a>
+      </div>
+      <div class="lib-foot"><a class="btn" href="#"><span data-i="lib.full">Explore the Full Library</span></a></div>
+    </div>
+  </section>
+
+  <!-- НОВИНИ -->
+  <section class="news" id="news">
+    <div class="wrap news-grid">
+      <div class="pic" data-reveal><img src="../../images/en/Square-Knot-EN_.webp" data-bg-src="../../images/bg/---5.58.5.webp" alt="" loading="lazy"></div>
+      <div data-reveal style="--d:.1s">
+        <h2 class="sec" data-i="news.title">Latest News</h2>
+        <time class="label brass" datetime="2026-07-09" data-i="news.date">July 9, 2026</time>
+        <h3 data-i="news.h">New venture</h3>
+        <p data-i="news.text">Hello everyone! I have some great news to share with you. We are counting the days until the release of my new book! Very soon, the first part of the "BEYOND THE PETROHAN FILES" trilogy, titled "SQUARE KNOT", will officially be out.</p>
+        <a class="link" href="#"><span data-i="news.more">Read all news →</span><i></i></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot" id="footer">
+  <div class="wrap">
+    <div class="cols">
+      <nav aria-label="Footer">
+        <a href="#library" data-i="nav.library">The Library</a>
+        <a href="#news" data-i="nav.news">News</a>
+        <a href="#about" data-i="nav.about">About</a>
+      </nav>
+      <p><span data-i="foot.support">Customer support:</span> <a href="mailto:contact@krvoden.com">contact@krvoden.com</a></p>
+    </div>
+  </div>
+  <div class="wm" aria-hidden="true">Karel Voden</div>
+  <div class="wrap">
+    <div class="legal">
+      <span>© 2024 Karel Voden. All rights reserved.</span>
+      <span><a href="#" data-i="foot.privacy">Privacy Policy</a> &nbsp;|&nbsp; <a href="#" data-i="foot.terms">Terms of Service</a></span>
+    </div>
+  </div>
+</footer>
+
+<div id="cookie-banner" class="cookie-banner" role="region" aria-label="Cookies">
+  <div class="cookie-content">
+    <p id="cookie-text" data-i="cookie.text" data-html>We use cookies to enhance your experience and for analytics. By continuing to browse, you agree to our <a href="#">Privacy Policy</a>.</p>
+    <button id="cookie-accept-btn" class="btn" type="button"><span data-i="cookie.ok">Accept</span></button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="i18n.js"></script>
+<script src="brand.js"></script>
+</body>
+</html>
