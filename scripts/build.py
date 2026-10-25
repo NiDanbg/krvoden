@@ -201,7 +201,7 @@ def iter_all_books(data):
 
 
 def search_index(data):
-    """Flat list of every book in every language it exists in - one entry per
+    """Flat list of every book in every language it exists in — one entry per
     edition, so a German title leads to the German page. Read by assets/site.js."""
     entries = []
 
@@ -340,6 +340,50 @@ AI_TRAINING_AGENTS = [
 SEARCH_AGENTS = ['Googlebot', 'Googlebot-Image', 'bingbot', 'Applebot', 'DuckDuckBot']
 
 
+def intro_text(data, ui):
+    """The author intro without its "Learn more" link - a sentence, not a button."""
+    return strip_tags(re.sub(r'<a\s[^>]*>.*?</a>', '', data['meta'][ui]['intro'] or '', flags=re.S))
+
+
+def llms_txt(data):
+    """/llms.txt - a plain map of the site for AI assistants: who the author is,
+    what each series is, and where every book lives, in every language it exists in."""
+    def book_line(book, series=None):
+        i18n = book.get('i18n', {})
+        lang = 'en' if 'en' in i18n else next(iter(i18n))
+        bd = i18n[lang]
+        facts = [bd.get('genre')]
+        if series:
+            n = R.book_number(series, book)
+            facts.append(f"book {n}")
+        if bd.get('published'):
+            facts.append(str(bd['published']))
+        facts.append('editions: ' + ', '.join(R.LANG_AUTONYMS.get(l, l) for l in i18n))
+        return (f"- [{bd.get('title', book['id'])}]({R.BASE_URL}{R.book_path(book['id'], lang)}): "
+                + '; '.join(f for f in facts if f))
+
+    name = R.author_name(data, 'en')
+    out = [f'# {name}', '', f'> {intro_text(data, "en")}', '',
+           f'Official website of the author {name}. Every book has its own page with a synopsis, '
+           'an excerpt where available, and links to the stores that sell it. '
+           'Pages in Bulgarian live under /bg/; book pages exist in each language the book is published in.', '',
+           '## Pages', '',
+           f'- [About the author]({R.BASE_URL}{R.about_path("en")})',
+           f'- [The library]({R.BASE_URL}{R.library_path("en")}): all series and standalone books',
+           f'- [News]({R.BASE_URL}{R.news_path("en")})',
+           f'- [Contact]({R.BASE_URL}{R.contact_path("en")})', '']
+    for s in data.get('series', []):
+        sd = s['i18n'].get('en') or {}
+        out += [f"## {sd.get('title', s['id'])}", '']
+        syn = strip_tags(sd.get('series_synopsis') or '')
+        out += [f'Series page: {R.BASE_URL}{R.series_path(s["id"], "en")}'] + ([syn] if syn else []) + ['']
+        out += [book_line(b, s) for b in R.series_books(s)] + ['']
+    for kind, title in (('novels', 'Standalone novels'), ('short_stories', 'Short stories')):
+        if data.get(kind):
+            out += [f'## {title}', ''] + [book_line(b) for b in data[kind]] + ['']
+    return '\n'.join(out)
+
+
 def robots_txt():
     """Every crawler answered by name. A wildcard Allow says the same thing, but
     naming them makes the policy readable and makes changing one a one-line edit."""
@@ -393,7 +437,8 @@ def build():
             title=R.site_title(data, ui),
             description=clip(strip_tags(data['meta'][ui]['intro'])),
             body_html=body, active_nav_base='/',
-            jsonld=[R.jsonld_website(data, ui), R.jsonld_person(data, ui)],
+            jsonld=[R.jsonld_website(data, ui),
+                    R.jsonld_person(data, ui, intro_text(data, ui))],
             nav_lang_switch=same_route_switch(lambda l: R.home_path(l)),
         ), 1.0)
 
@@ -403,6 +448,9 @@ def build():
             title=f"{R.UI_STRINGS[ui]['the_library']} | {R.author_name(data, ui)}",
             description=R.UI_STRINGS[ui]['desc_library'],
             body_html=body, active_nav_base='library/',
+            jsonld=[R.jsonld_library(data, ui),
+                    R.jsonld_breadcrumbs([(R.author_name(data, ui), R.home_path(ui)),
+                                          (R.UI_STRINGS[ui]['the_library'], R.library_path(ui))])],
             nav_lang_switch=same_route_switch(lambda l: R.library_path(l)),
         ), 0.9)
 
@@ -423,7 +471,12 @@ def build():
                 data, lang=ui, path=R.series_path(series['id'], ui),
                 title=f"{sd.get('title', series['id'])} | {R.author_name(data, ui)}",
                 description=clip(sd.get('series_synopsis')) or R.UI_STRINGS[ui]['desc_library'],
+                og_image=series.get('seriesImage') or 'images/common/social-share.jpg',
                 body_html=body,
+                jsonld=[R.jsonld_series(data, series, ui),
+                        R.jsonld_breadcrumbs([(R.author_name(data, ui), R.home_path(ui)),
+                                              (R.UI_STRINGS[ui]['the_library'], R.library_path(ui)),
+                                              (sd.get('title', series['id']), R.series_path(series['id'], ui))])],
                 nav_lang_switch=same_route_switch(lambda l, sid=series['id']: R.series_path(sid, l)),
             ), 0.7)
 
@@ -574,6 +627,7 @@ def build():
         nav_lang_switch=same_route_switch(lambda l: R.home_path(l)),
     ), encoding='utf-8')
 
+    (DIST / 'llms.txt').write_text(llms_txt(data), encoding='utf-8')
     (DIST / 'robots.txt').write_text(
         robots_txt(), encoding='utf-8'
     )

@@ -4,6 +4,7 @@ No DOM, no fetch — every function takes plain data and returns an HTML string.
 """
 import html as _html
 import json as _json
+import re as _re
 
 BASE_URL = "https://krvoden.com"
 GA_ID = "G-GF28ENCM9M"
@@ -11,13 +12,66 @@ SENDER_ACCOUNT_ID = "ed72b4b7a59839"
 SUPPORT_EMAIL = "contact@krvoden.com"
 
 # Short content hashes for style.css / assets/site.js, filled in by build.py.
-# They ride along as ?v=... so a returning reader never runs a stale script.
+# They ride along as ?v=… so a returning reader never runs a stale script.
 ASSET_V = {'css': '', 'js': ''}
 
 
 def asset_v(kind):
     return ('?v=' + ASSET_V[kind]) if ASSET_V.get(kind) else ''
 
+
+# ─────────────────────────────────────────────────────────────────────────
+# THE SHELF — the books stand on a shelf, each spine in its cover's colour.
+# ─────────────────────────────────────────────────────────────────────────
+
+FONTS = 'family=Prata&family=Golos+Text:wght@400;500;600'
+THEME_COLOR = '#121315'
+
+# A series may still get a world of its own later; none has one yet.
+WORLDS = {}
+
+# Each book carries the colour its cover is built around.
+BOOK_TINTS = {
+    'gnostichnia-shifar': '#2c9fb0',
+    'the-tuzo-anomaly': '#e0682c',
+    'the-seed-of-eden': '#b9b4a6',
+    'dyrvoto-na-syznanieto': '#3fb6b0',
+    'square-knot': '#c8323a',
+    'in-the-grip-of-shadows': '#56c6d8',
+}
+
+# Filled while the book pages are rendered, read by the excerpt page that
+# build.py renders right after each book page.
+BOOK_WORLD = {}
+
+
+def series_books(series):
+    """Books in reading order. The admin panel may append a new book anywhere in
+    the list; its position number is what decides where it stands."""
+    books = (series or {}).get('books', [])
+    return [b for _, b in sorted(enumerate(books), key=lambda ib: (ib[1].get('position') or ib[0] + 1, ib[0]))]
+
+
+def world_key(series):
+    return (WORLDS.get(series['id']) or {}).get('key', '') if series else ''
+
+
+def fonts_link(world=''):
+    return f'<link href="https://fonts.googleapis.com/css2?{FONTS}&display=swap" rel="stylesheet">'
+
+
+def tint_attr(book_id):
+    tint = BOOK_TINTS.get(book_id)
+    return f' style="--tint: {tint}"' if tint else ''
+
+
+def split(kind, aside, main):
+    """Every page has two parts: what it is (name, cover, title) and what is in it."""
+    return f"""
+        <div class="split split--{kind}">
+            <div class="split-aside"><div class="split-aside-inner">{aside}</div></div>
+            <div class="split-main">{main}</div>
+        </div>"""
 
 ALL_LANGS = ['bg', 'en', 'de', 'fr', 'it', 'nl', 'es', 'pt', 'se']
 
@@ -32,7 +86,6 @@ OG_LOCALES = {'bg': 'bg_BG', 'en': 'en_US', 'de': 'de_DE', 'fr': 'fr_FR', 'it': 
 
 def bcp47(lang):
     return BCP47.get(lang, lang)
-
 
 UI_LANGS = ['en', 'bg']
 
@@ -71,9 +124,6 @@ UI_STRINGS = {
         'back': 'Back', 'excerpt_from': 'Excerpt from',
         'not_found': '404 - Page Not Found',
         'privacy_policy': 'Privacy Policy',
-        'by': 'by',
-        'cookie_text': 'We use cookies to enhance your experience and for analytics. By continuing to browse, you agree to our <a href="/privacy-policy/">Privacy Policy</a>.',
-        'cookie_accept': 'Accept',
         'terms_of_service': 'Terms of Service',
         'customer_support': 'Customer support',
         'search': 'Search',
@@ -86,7 +136,18 @@ UI_STRINGS = {
         'read_excerpt_short': 'Read excerpt',
         'search_placeholder': 'Search for a book…',
         'search_none': 'Nothing found',
+        'by': 'by',
+        'cookie_text': 'We use cookies to enhance your experience and for analytics. By continuing to browse, you agree to our <a href="/privacy-policy/">Privacy Policy</a>.',
+        'cookie_accept': 'Accept',
         'get_gift': 'Get it free',
+        'book_n': 'Book {n}',
+        'tagline': 'Thrillers and noir',
+        'books_1': '1 book',
+        'books_n': '{n} books',
+        'skip': 'Skip to content',
+        'menu': 'Menu',
+        'read_on': 'About the book',
+        'all_books': 'The books',
         'desc_library': 'Every novel and short story by Karel Voden, with the series they belong to and the languages each one is published in.',
         'desc_novels': 'The standalone novels of Karel Voden - thrillers that braid ancient mysteries into modern conspiracies.',
         'desc_stories': 'Short stories by Karel Voden, set in the worlds his novels open up.',
@@ -122,9 +183,6 @@ UI_STRINGS = {
         'back': 'Назад', 'excerpt_from': 'Откъс от',
         'not_found': '404 - Страницата не е намерена',
         'privacy_policy': 'Политика за поверителност',
-        'by': 'от',
-        'cookie_text': 'Използваме "бисквитки", за да подобрим вашето преживяване и за анализи. Продължавайки, вие се съгласявате с нашата <a href="/bg/privacy-policy/">Политика за поверителност</a>.',
-        'cookie_accept': 'Приемам',
         'terms_of_service': 'Общи условия',
         'customer_support': 'Обслужване на клиенти',
         'search': 'Търсене',
@@ -137,7 +195,18 @@ UI_STRINGS = {
         'read_excerpt_short': 'Прочети откъс',
         'search_placeholder': 'Търсене на книга…',
         'search_none': 'Няма намерено',
+        'by': 'от',
+        'cookie_text': 'Използваме "бисквитки", за да подобрим вашето преживяване и за анализи. Продължавайки, вие се съгласявате с нашата <a href="/bg/privacy-policy/">Политика за поверителност</a>.',
+        'cookie_accept': 'Приемам',
         'get_gift': 'Вземи безплатно',
+        'book_n': 'Книга {n}',
+        'tagline': 'Трилъри и ноар',
+        'books_1': '1 книга',
+        'books_n': '{n} книги',
+        'skip': 'Към съдържанието',
+        'menu': 'Меню',
+        'read_on': 'За книгата',
+        'all_books': 'Книгите',
         'desc_library': 'Всички романи и разкази на Karel Voden, поредиците, към които принадлежат, и езиците, на които излизат.',
         'desc_novels': 'Самостоятелните романи на Karel Voden - трилъри, в които древни загадки се преплитат със съвременни конспирации.',
         'desc_stories': 'Разкази на Karel Voden, разположени в световете на романите му.',
@@ -162,8 +231,8 @@ BUY_DIRECT_LABELS = {
     'se': 'Köp direkt av författaren för {price}',
 }
 
-# (decimal separator, layout) per language. Prices are in euro; the non-breaking
-# space keeps the amount and the symbol on the same line.
+# (decimal separator, layout) per language. Prices are in euro;   keeps
+# the amount and the symbol on the same line.
 PRICE_FORMATS = {
     'bg': (',', '{amount} €'),
     'en': ('.', '€{amount}'),
@@ -175,6 +244,7 @@ PRICE_FORMATS = {
     'pt': (',', '{amount} €'),
     'se': (',', '{amount} €'),
 }
+
 
 # Short form of the same button, for the bookshop rows where the price stands on its own.
 BUY_DIRECT_SHORT = {
@@ -491,6 +561,12 @@ def person_ref(data, lang):
     return node
 
 
+def person_profiles(data):
+    """The author's pages elsewhere (Amazon, Goodreads, ...), from meta.sameAs in
+    data.js. They tell search engines and AI assistants that all of them are one person."""
+    return [u for u in (data.get('meta') or {}).get('sameAs', []) if u]
+
+
 def jsonld_website(data, lang):
     ui = ui_lang_of(lang)
     return {
@@ -511,7 +587,71 @@ def jsonld_person(data, lang, bio_text=''):
     if bio:
         node['description'] = bio[:300]
     node['jobTitle'] = 'Author' if ui == 'en' else 'Писател'
+    genres = sorted({short_genre(b['i18n'][l]['genre'])
+                     for s in data.get('series', []) for b in s.get('books', [])
+                     for l in b.get('i18n', {}) if l == 'en' and b['i18n'][l].get('genre')})
+    if genres:
+        node['knowsAbout'] = genres
+    profiles = person_profiles(data)
+    if profiles:
+        node['sameAs'] = profiles
     return node
+
+
+def jsonld_series(data, series, lang):
+    """A series as a BookSeries that lists its books in reading order."""
+    ui = ui_lang_of(lang)
+    sd = series['i18n'].get(ui) or series['i18n'].get('en') or {}
+    parts = []
+    for i, b in enumerate(series_books(series), 1):
+        display_lang, bd = book_display(b, ui)
+        if not bd:
+            continue
+        part = {'@type': 'Book', 'name': bd.get('title', ''), 'url': abs_url(book_path(b['id'], display_lang)),
+                'position': b.get('position') or i, 'inLanguage': bcp47(display_lang)}
+        if bd.get('genre'):
+            part['genre'] = bd['genre']
+        parts.append(part)
+    node = {
+        '@context': 'https://schema.org',
+        '@type': 'BookSeries',
+        'name': sd.get('title', series['id']),
+        'url': abs_url(series_path(series['id'], ui)),
+        'author': person_ref(data, ui),
+        'inLanguage': bcp47(ui),
+        'hasPart': parts,
+    }
+    synopsis = ' '.join(_re.sub(r'<[^>]+>', ' ', sd.get('series_synopsis') or '').split())
+    if synopsis:
+        node['description'] = synopsis
+    if series.get('seriesImage'):
+        node['image'] = abs_url(series['seriesImage'])
+    return node
+
+
+def jsonld_library(data, lang):
+    """The library as a collection of the series and the standalone books."""
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    items = []
+    for x in data.get('series', []):
+        sd = x['i18n'].get(ui) or x['i18n'].get('en') or {}
+        items.append({'@type': 'BookSeries', 'name': sd.get('title', x['id']), 'url': abs_url(series_path(x['id'], ui))})
+    for kind in ('novels', 'short_stories'):
+        for b in data.get(kind, []):
+            display_lang, bd = book_display(b, ui)
+            if bd:
+                items.append({'@type': 'Book', 'name': bd.get('title', ''), 'url': abs_url(book_path(b['id'], display_lang))})
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        'name': s['the_library'],
+        'url': abs_url(library_path(ui)),
+        'inLanguage': bcp47(ui),
+        'about': person_ref(data, ui),
+        'mainEntity': {'@type': 'ItemList', 'itemListElement': [
+            dict(item, position=i) for i, item in enumerate(items, 1)]},
+    }
 
 
 def jsonld_book(data, book, lang, synopsis_text='', series=None):
@@ -537,7 +677,9 @@ def jsonld_book(data, book, lang, synopsis_text='', series=None):
         node['publisher'] = {'@type': 'Organization', 'name': bdata['publisher']}
     if book.get('position'):
         node['position'] = book['position']
-    node['abstract'] = book_facts_sentence(data, book, lang, series)
+    abstract = book_facts_sentence(data, book, lang, series)
+    if abstract:
+        node['abstract'] = abstract
     if bdata.get('cover'):
         node['image'] = abs_url(bdata['cover'])
     syn = ' '.join((synopsis_text or '').split())
@@ -562,8 +704,6 @@ def jsonld_book(data, book, lang, synopsis_text='', series=None):
             'availability': 'https://schema.org/InStock',
             'url': url,
         }
-    if not node.get('abstract'):
-        node.pop('abstract', None)
     links = [l for l in book.get('links', []) if l.get('lang', '').lower() == lang.lower() and l.get('url')]
     if links:
         node['sameAs'] = [l['url'] for l in links]
@@ -685,12 +825,15 @@ def layout(data, *, lang, path, title, description, body_html,
         lang_switch_html = ' | '.join(parts)
 
     strings = UI_STRINGS[ui]
+    world_match = _re.search(r'data-world="([a-z]+)"', body_html)
+    world = world_match.group(1) if world_match else ''
 
     return f"""<!DOCTYPE html>
 <html lang="{bcp47(lang)}" data-site-lang="{lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="{THEME_COLOR}">
     <title>{esc(title)}</title>
 
     <meta name="description" content="{esc(description)}">
@@ -731,41 +874,47 @@ def layout(data, *, lang, path, title, description, body_html,
     <link rel="stylesheet" href="{root}style.css{asset_v('css')}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    {fonts_link(world)}
 </head>
-<body>
-    <header>
+<body class="{f'world-{world}' if world else 'world-none'}">
+    <a class="skip-link" href="#main-content">{esc(strings['skip'])}</a>
+    <header class="topbar">
         <nav class="navbar">
-            <a href="{home_path(ui)}" class="nav-logo">Karel VODEN</a>
+            <a href="{home_path(ui)}" class="nav-logo" translate="no"><span>Karel</span> <span>Voden</span></a>
             <ul class="nav-menu">{nav_items}</ul>
-            <div class="nav-search">
-                <button type="button" class="search-toggle" aria-label="{esc(strings['search'])}" aria-expanded="false">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                         stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
-                </button>
-                <div class="search-panel">
-                    <input type="search" class="search-input" autocomplete="off" spellcheck="false"
-                           placeholder="{esc(strings['search_placeholder'])}" aria-label="{esc(strings['search'])}">
-                    <div class="search-results" data-none="{esc(strings['search_none'])}" hidden></div>
+            <div class="nav-tools">
+                <div class="nav-search">
+                    <button type="button" class="search-toggle" aria-label="{esc(strings['search'])}" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+                    </button>
+                    <div class="search-panel">
+                        <input type="search" class="search-input" autocomplete="off" spellcheck="false"
+                               placeholder="{esc(strings['search_placeholder'])}" aria-label="{esc(strings['search'])}">
+                        <div class="search-results" data-none="{esc(strings['search_none'])}" hidden></div>
+                    </div>
                 </div>
+                <div class="lang-switcher">{lang_switch_html}</div>
             </div>
-            <button class="hamburger" aria-label="Open menu">
+            <button type="button" class="hamburger" aria-label="{esc(strings['menu'])}">
                 <span class="bar"></span><span class="bar"></span><span class="bar"></span>
             </button>
-            <div class="lang-switcher">{lang_switch_html}</div>
         </nav>
     </header>
 
-    <main id="main-content">
+    <div class="page">
+        <main id="main-content">
 {body_html}
-    </main>
+        </main>
 
-    <footer>
-        <div class="container">
-            <p>© 2024 Karel Voden. All rights reserved. | <a href="{privacy_path(ui)}">{esc(strings['privacy_policy'])}</a> | <a href="{terms_path(ui)}">{esc(strings['terms_of_service'])}</a>{f' | <a href="{store_path(ui)}">{esc(strings["store"])}</a>' if STORE_ACTIVE else ''}</p>
-            <p class="footer-support">{esc(strings['customer_support'])}: <a href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a></p>
-        </div>
-    </footer>
+        <footer>
+            <div class="container">
+                <p>© 2024 Karel Voden. All rights reserved.</p>
+                <p class="footer-links"><a href="{privacy_path(ui)}">{esc(strings['privacy_policy'])}</a> <a href="{terms_path(ui)}">{esc(strings['terms_of_service'])}</a>{f' <a href="{store_path(ui)}">{esc(strings["store"])}</a>' if STORE_ACTIVE else ''}</p>
+                <p class="footer-support">{esc(strings['customer_support'])}: <a href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a></p>
+            </div>
+        </footer>
+    </div>
 
     <script src="{root}assets/site.js{asset_v('js')}"></script>
 
@@ -784,26 +933,135 @@ def layout(data, *, lang, path, title, description, body_html,
 # SHARED PIECES
 # ─────────────────────────────────────────────────────────────────────────
 
-def book_card(book, ui_lang):
+def book_display(book, ui_lang):
+    """The edition a list shows: the reader's language if it exists, else English."""
     i18n = book.get('i18n', {})
-    display_lang = ui_lang if ui_lang in i18n else 'en'
-    bdata = i18n.get(display_lang)
+    display_lang = ui_lang if ui_lang in i18n else ('en' if 'en' in i18n else next(iter(i18n), ui_lang))
+    return display_lang, i18n.get(display_lang)
+
+
+def book_number(series, book):
+    if not series:
+        return None
+    for i, b in enumerate(series_books(series), 1):
+        if b['id'] == book['id']:
+            return b.get('position') or i
+    return None
+
+
+def books_count(ui, n):
+    s = UI_STRINGS[ui]
+    return s['books_1'] if n == 1 else s['books_n'].format(n=n)
+
+
+def lang_pills(book):
+    return ''.join(
+        f'<a href="{book_path(book["id"], l)}" class="lang-pill" lang="{bcp47(l)}">{l.upper()}</a>'
+        for l in book.get('i18n', {})
+    )
+
+
+def series_of_book(data, book):
+    for s in data.get('series', []):
+        if any(b['id'] == book['id'] for b in s.get('books', [])):
+            return s
+    return None
+
+
+def series_kicker(series, book, ui):
+    """"The Beyond the Petrohan Files, book 1" - a link to the series and the place in it."""
+    if not series:
+        return ''
+    s = UI_STRINGS[ui]
+    sd = series['i18n'].get(ui) or series['i18n'].get('en') or {}
+    n = book_number(series, book)
+    return (f'<p class="world-crumb"><a href="{series_path(series["id"], ui)}">{esc(sd.get("title", ""))}</a>'
+            f'{"<span>" + esc(s["book_n"].format(n=n)) + "</span>" if n else ""}</p>')
+
+
+def book_card(book, ui_lang, n=None):
+    display_lang, bdata = book_display(book, ui_lang)
     if not bdata:
         return ''
+    s = UI_STRINGS[ui_lang]
     title = bdata.get('title', '')
     cover = bdata.get('cover') or 'images/common/cover-placeholder.jpg'
-    pills = ''.join(
-        f'<a href="{book_path(book["id"], l)}" class="lang-pill">{l.upper()}</a>'
-        for l in i18n
-    )
-    status = f'<span class="status-tag">{esc(UI_STRINGS[ui_lang]["in_progress"])}</span>' \
+    status = f'<span class="status-tag">{esc(s["in_progress"])}</span>' \
         if book.get('status') == 'in-progress' else ''
+    number = f'<p class="book-card-n">{esc(s["book_n"].format(n=n))}</p>' if n else ''
+    genre = f'<p class="book-card-genre">{esc(short_genre(bdata["genre"]))}</p>' if bdata.get('genre') else ''
     href = book_path(book['id'], display_lang)
-    link_style = 'text-decoration:none;color:inherit'
-    return f"""<div class="book-card">
-        <a href="{href}" style="{link_style}"><img src="/{esc(cover)}" alt="Cover of {esc(title)}" loading="lazy"></a>
-        <div class="book-card-content"><h3><a href="{href}" style="{link_style}">{esc(title)}</a></h3><div class="lang-pills">{pills}</div>{status}</div>
-    </div>"""
+    return f"""<article class="book-card"{tint_attr(book['id'])}>
+        <a href="{href}" class="book-card-cover" tabindex="-1" aria-hidden="true"><img src="/{esc(cover)}" alt="" loading="lazy"></a>
+        <div class="book-card-content">{number}<h3><a href="{href}">{esc(title)}</a></h3>{genre}<div class="lang-pills">{lang_pills(book)}</div>{status}</div>
+    </article>"""
+
+
+def book_panel(data, book, ui, featured=False, eager=False):
+    """One book as a scene of its own: cover, title, what kind of book it is, and
+    the two ways in - its page and its excerpt."""
+    display_lang, bdata = book_display(book, ui)
+    if not bdata:
+        return ''
+    s = UI_STRINGS[ui]
+    cover = bdata.get('cover') or 'images/common/cover-placeholder.jpg'
+    href = book_path(book['id'], display_lang)
+    genre = f'<p class="panel-genre">{esc(short_genre(bdata["genre"]))}</p>' if bdata.get('genre') else ''
+    excerpt = (f'<a href="{excerpt_path(book["id"], display_lang)}" class="btn-secondary">{esc(s["read_excerpt"])}</a>'
+               if bdata.get('excerpt') else '')
+    lazy = '' if eager else ' loading="lazy"'
+    series = series_of_book(data, book)
+    # Books of one series share a mark on their spines, so the set reads as a set.
+    in_series = f' data-series="{esc(series["id"])}"' if series else ''
+    return f"""<article class="panel{' panel--featured' if featured else ''}"{in_series}{tint_attr(book['id'])}>
+                <a href="{href}" class="panel-cover" tabindex="-1" aria-hidden="true"><img src="/{esc(cover)}" alt=""{lazy}></a>
+                <div class="panel-text">
+                    {series_kicker(series, book, ui)}
+                    <h3 class="panel-title"><a href="{href}">{esc(bdata['title'])}</a></h3>
+                    {genre}
+                    <div class="panel-actions"><a href="{href}" class="btn">{esc(s['read_on'])}</a>{excerpt}</div>
+                    <div class="lang-pills">{lang_pills(book)}</div>
+                </div>
+            </article>"""
+
+
+def all_books(data):
+    """Every book once: the series in reading order, then the novels, then the stories."""
+    out = []
+    for s in data.get('series', []):
+        out += series_books(s)
+    return out + list(data.get('novels', [])) + list(data.get('short_stories', []))
+
+
+def series_entry(data, series, lang, tag='h3'):
+    """A series in the library: name, what it is, its books' covers."""
+    ui = ui_lang_of(lang)
+    sd = series['i18n'].get(ui) or series['i18n'].get('en') or {}
+    books = series_books(series)
+    covers = ''
+    for b in books[:4]:
+        _, bd = book_display(b, ui)
+        if bd and bd.get('cover'):
+            covers += f'<img src="/{esc(bd["cover"])}" alt="" loading="lazy">'
+    synopsis = sd.get('series_synopsis') or ''
+    genre = ''
+    if books:
+        _, bd = book_display(books[0], ui)
+        if bd and bd.get('genre'):
+            genre = short_genre(bd['genre'])
+    meta = ' / '.join(filter(None, [genre, books_count(ui, len(books))]))
+    return f"""<a href="{series_path(series['id'], lang)}" class="series-entry">
+            <span class="series-entry-covers">{covers}</span>
+            <span class="series-entry-text">
+                <{tag} class="series-entry-title">{esc(sd.get('title', series['id']))}</{tag}>
+                <span class="world-meta">{esc(meta)}</span>
+                {f'<span class="series-entry-synopsis">{synopsis}</span>' if synopsis else ''}
+            </span>
+        </a>"""
+
+
+def _rel_img(path):
+    return '/' + path.lstrip('/') if path else ''
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -815,191 +1073,108 @@ def render_homepage(data, lang, latest_news_html='', store_band=''):
     s = UI_STRINGS[ui]
     meta = data['meta'][ui]
     featured_ids = data.get('featured', [])
-    cards = []
-    for bid in featured_ids:
-        book, _, _ = find_book_by_id(data, bid)
-        if book:
-            cards.append(book_card(book, ui))
-    body = f"""
-        <div class="hero-section"><div class="container"><h1>{esc(s['welcome'])}</h1><p class="author-intro">{meta['intro']}</p></div></div>
-        <div class="container homepage-content">
-            <h2>{esc(s['latest_works'])}</h2>
-            <div class="books-grid-featured">{''.join(cards)}</div>
-            <div class="all-books-link"><a href="{library_path(lang)}" class="btn">{esc(s['explore_library'])}</a></div>
-            {store_band}
-            {latest_news_html}
-        </div>"""
-    return body
+    featured = [b for b in (find_book_by_id(data, bid)[0] for bid in featured_ids) if b]
+    rest = [b for b in all_books(data) if b['id'] not in featured_ids]
+    panels = ''.join(book_panel(data, b, ui, featured=True, eager=(i == 0)) for i, b in enumerate(featured))
+    panels += ''.join(book_panel(data, b, ui) for b in rest)
+    aside = f"""
+                <h1 class="masthead-name" translate="no"><span>Karel</span> <span>Voden</span></h1>
+                <p class="masthead-tagline">{esc(s['tagline'])}</p>
+                <p class="author-intro">{meta['intro']}</p>"""
+    main = f"""
+                <section class="shelf">
+                    <h2 class="section-title">{esc(s['all_books'])}</h2>
+                    <div class="panels">{panels}</div>
+                    <div class="all-books-link"><a href="{library_path(lang)}" class="btn-secondary">{esc(s['explore_library'])}</a></div>
+                </section>
+                <div class="home-tail">
+                    {store_band}
+                    {latest_news_html}
+                </div>"""
+    return split('home', aside, main)
 
 
 def render_news_excerpt_block(lang, article_title, excerpt_text, slug):
     ui = ui_lang_of(lang)
     s = UI_STRINGS[ui]
-    return f"""<div class="latest-news-section">
-        <h2>{esc(s['latest_news'])}</h2>
+    return f"""<section class="latest-news-section">
+        <h2 class="section-title">{esc(s['latest_news'])}</h2>
         <div class="news-excerpt">
             <h3>{esc(article_title)}</h3>
             <p>{esc(excerpt_text)}</p>
-            <a href="{news_path(lang)}" class="read-more">{esc(s['read_all_news'])} →</a>
+            <a href="{news_path(lang)}" class="read-more">{esc(s['read_all_news'])}</a>
         </div>
-    </div>"""
+    </section>"""
 
 
 def render_library_hub(data, lang):
     ui = ui_lang_of(lang)
     s = UI_STRINGS[ui]
-    cards = []
-    for series in data.get('series', []):
-        sd = series['i18n'].get(ui) or series['i18n'].get('en') or {}
-        bg_style = ''
-        if series.get('seriesImage'):
-            bg_style = f"background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/{esc(series['seriesImage'])}')"
-        cards.append(f'<a href="{series_path(series["id"], lang)}" class="hub-card" style="{bg_style}"><h2>{esc(sd.get("title", series["id"]))}</h2></a>')
-    body = f"""
-        <div class="container library-hub">
-            <h1>{esc(s['the_library'])}</h1>
-            <h2>{esc(s['explore_series'])}</h2>
-            <div class="hub-grid">{''.join(cards)}</div>
-            <h2>{esc(s['other_works'])}</h2>
-            <div class="hub-grid small">
-                <a href="{library_path(lang, 'novels')}" class="hub-card"><h2>{esc(s['standalone_novels'])}</h2></a>
-                <a href="{library_path(lang, 'stories')}" class="hub-card"><h2>{esc(s['short_stories'])}</h2></a>
-            </div>
-        </div>"""
-    return body
+    series_html = ''.join(series_entry(data, x, ui, tag='h3') for x in data.get('series', []))
+    sections = ''
+    if series_html:
+        sections += f"""<section class="library-block">
+                    <h2 class="section-title">{esc(s['explore_series'])}</h2>
+                    <div class="series-list">{series_html}</div>
+                </section>"""
+    for kind, sub, label in (('novels', 'novels', s['standalone_novels']),
+                             ('short_stories', 'stories', s['short_stories'])):
+        books = data.get(kind, [])
+        if not books:
+            continue
+        cards = ''.join(book_card(b, ui) for b in books)
+        sections += f"""<section class="library-block">
+                    <h2 class="section-title"><a href="{library_path(lang, sub)}">{esc(label)}</a></h2>
+                    <div class="books-grid">{cards}</div>
+                </section>"""
+    aside = f"""
+                <h1 class="page-title">{esc(s['the_library'])}</h1>
+                <p class="page-lede">{esc(s['desc_library'])}</p>"""
+    return split('library', aside, sections)
 
 
 def render_series_page(data, series, lang):
     ui = ui_lang_of(lang)
     s = UI_STRINGS[ui]
     sd = series['i18n'].get(ui) or series['i18n'].get('en') or {}
-    header_img = series.get('seriesImage') or 'images/common/series-bg-placeholder.jpg'
-    cards = ''.join(book_card(b, ui) for b in series.get('books', []))
-    body = f"""
-        <div class="series-page-header" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/{esc(header_img)}');">
-            <div class="container"><h1>{esc(sd.get('title', series['id']))}</h1><p class="series-synopsis">{sd.get('series_synopsis', '')}</p></div>
-        </div>
-        <div class="container"><h2>{esc(s['books_in_series'])}</h2><div class="books-grid">{cards}</div></div>"""
-    return body
+    key = world_key(series) or 'plain'
+    header_img = series.get('seriesImage') or ''
+    img_style = f' style="--world-img: url(&quot;/{esc(header_img)}&quot;)"' if header_img else ''
+    books = series_books(series)
+    items = ''.join(f'<li>{book_card(b, ui, book_number(series, b))}</li>' for b in books)
+    synopsis = sd.get('series_synopsis') or ''
+    first_genre = ''
+    if books:
+        _, bd = book_display(books[0], ui)
+        if bd and bd.get('genre'):
+            first_genre = short_genre(bd['genre'])
+    meta = ' / '.join(filter(None, [first_genre, books_count(ui, len(books))]))
+    aside = f"""
+                <div class="series-page-header{' has-image' if header_img else ''}"{img_style}>
+                    <p class="world-crumb"><a href="{library_path(lang)}">{esc(s['the_library'])}</a></p>
+                    <h1 class="page-title">{esc(sd.get('title', series['id']))}</h1>
+                    <p class="world-meta">{esc(meta)}</p>
+                    {f'<p class="series-synopsis">{synopsis}</p>' if synopsis else ''}
+                </div>"""
+    main = f"""
+                <section class="world-shelf">
+                    <h2 class="section-title">{esc(s['books_in_series'])}</h2>
+                    <ol class="world-books">{items}</ol>
+                </section>"""
+    return f'<div class="world world--{key}" data-world="{key}">{split("series", aside, main)}</div>'
 
 
 def render_book_list_page(data, lang, kind):
     ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
     titles = {'novels': {'en': 'Standalone Novels', 'bg': 'Самостоятелни романи'},
               'short_stories': {'en': 'Short Stories', 'bg': 'Разкази'}}
     title = titles[kind][ui]
     cards = ''.join(book_card(b, ui) for b in data.get(kind, []))
-    return f"""<div class="container book-list-page"><h1>{esc(title)}</h1><div class="books-grid">{cards}</div></div>"""
-
-
-def render_book_detail(data, book, lang, synopsis_html, series=None):
-    ui = ui_lang_of(lang)
-    s = UI_STRINGS[ui]
-    bdata = book['i18n'].get(lang) or book['i18n'].get('en')
-    cover = bdata.get('cover') or 'images/common/cover-placeholder.jpg'
-    excerpt_link = ''
-    if bdata.get('excerpt'):
-        excerpt_link = f'<div class="excerpt-link-cover"><a href="{excerpt_path(book["id"], lang)}" class="btn-secondary">{esc(s["read_excerpt"])}</a></div>'
-    links = [l for l in book.get('links', []) if l.get('lang', '').lower() == lang.lower()]
-    if links:
-        buy_html = ''.join(
-            f'<a href="{esc(l["url"])}" target="_blank" rel="noopener" class="buy-logo-link" title="Buy on {esc(l["platform"])}"><img src="/images/common/{l["platform"].lower()}.png" alt="{esc(l["platform"])}"></a>'
-            for l in links
-        )
-    else:
-        buy_html = f'<p>{esc(s["no_links_lang"])}</p>'
-    synopsis_html = synopsis_html or f'<p>{esc(s["synopsis_not_available"])}</p>'
-    body = f"""
-        <div class="container book-detail-view">
-            <div class="book-detail-cover">
-                <img src="/{esc(cover)}" alt="{esc(bdata['title'])}">
-                {excerpt_link}
-            </div>
-            <div class="book-detail-info">
-                <h1>{esc(bdata['title'])}</h1>
-                {f'<p class="book-genre">{esc(bdata["genre"])}</p>' if bdata.get('genre') else ''}
-                {render_book_facts(data, book, lang, series)}
-                <h3>{esc(s['synopsis'])}</h3><div class="synopsis">{synopsis_html}</div>
-                {render_lead_magnet(bdata, lang)}
-                {render_direct_sale(bdata, lang)}
-                <h3>{esc(s['available_on'])}</h3>
-                <div class="buy-links">{buy_html}</div>
-            </div>
-        </div>"""
-    return body
-
-
-def render_excerpt_page(book, lang, excerpt_html):
-    ui = ui_lang_of(lang)
-    s = UI_STRINGS[ui]
-    bdata = book['i18n'].get(lang) or book['i18n'].get('en')
-    body = f"""
-        <div class="reading-container">
-            <h1 class="preview-title">{esc(s['excerpt_from'])} {esc(bdata['title'])}</h1>
-            <a href="{book_path(book['id'], lang)}" class="back-link">← {esc(s['back'])}</a>
-            <article class="prose">{excerpt_html}</article>
-            {render_lead_magnet(bdata, lang)}
-        </div>"""
-    return body
-
-
-def render_news_list_page(lang, articles):
-    """articles: list of dicts {slug, title, date, author, content_html}, newest first.
-    The whole article stands on the list page - a reader should not have to click
-    through to find out whether a piece of news concerns them."""
-    ui = ui_lang_of(lang)
-    s = UI_STRINGS[ui]
-    if not articles:
-        items = f'<p>{esc(s["no_news"])}</p>'
-    else:
-        items = ''
-        for a in articles:
-            items += f"""<article class="news-item">
-                <h2><a href="{news_article_path(a['slug'], lang)}" style="color:inherit;text-decoration:none">{esc(a['title'])}</a></h2>
-                <p class="news-meta"><span>{esc(a['date_fmt'])}</span> | <span>{esc(s['by'])} {esc(a['author'])}</span></p>
-                <div class="news-content">{a['content_html']}</div>
-            </article>"""
-    return f"""<div class="container news-page"><h1>{esc(s['news_and_updates'])}</h1><div class="news-list">{items}</div></div>"""
-
-
-def render_news_article_page(lang, article, content_html):
-    ui = ui_lang_of(lang)
-    s = UI_STRINGS[ui]
-    body = f"""<div class="container news-page">
-        <a href="{news_path(lang)}" class="back-link">← {esc(s['back'])}</a>
-        <article class="news-item">
-            <h1>{esc(article['title'])}</h1>
-            <p class="news-meta"><span>{esc(article['date_fmt'])}</span> | <span>{esc(s['by'])} {esc(article['author'])}</span></p>
-            <div class="news-content">{content_html}</div>
-        </article>
-    </div>"""
-    return body
-
-
-def render_about_page(data, lang, bio_html, author_photo):
-    ui = ui_lang_of(lang)
-    s = UI_STRINGS[ui]
-    name = author_name(data, lang)
-    return f"""<div class="container about-page">
-        <div class="author-photo-large"><img src="/{esc(author_photo)}" alt="Photo of {esc(name)}"></div>
-        <div class="author-bio-content"><h1>{esc(s['about_the_author'])}</h1><p class="bio-text">{bio_html}</p></div>
-    </div>"""
-
-
-def render_contact_page(lang):
-    ui = ui_lang_of(lang)
-    s = UI_STRINGS[ui]
-    return f"""<div class="container contact-page">
-        <h1>{esc(s['get_in_touch'])}</h1>
-        <p>{esc(s['contact_intro'])}</p>
-        <form id="contact-form" class="contact-form">
-            <div class="form-group"><label for="name">{esc(s['name'])}</label><input type="text" id="name" name="name" required></div>
-            <div class="form-group"><label for="email">{esc(s['email'])}</label><input type="email" id="email" name="email" required></div>
-            <div class="form-group"><label for="message">{esc(s['message'])}</label><textarea id="message" name="message" rows="6" required></textarea></div>
-            <button type="submit" class="btn">{esc(s['send_message'])}</button>
-        </form>
-        <div id="form-status"></div>
-    </div>"""
+    aside = f"""
+                <p class="world-crumb"><a href="{library_path(lang)}">{esc(s['the_library'])}</a></p>
+                <h1 class="page-title">{esc(title)}</h1>"""
+    return split('list', aside, f'<div class="books-grid">{cards}</div>')
 
 
 def render_lead_magnet(bdata, lang):
@@ -1030,8 +1205,8 @@ def render_lead_magnet(bdata, lang):
 
 
 def format_price(price, lang):
-    """Price as the reader of that language writes it. Anything that is not a
-    number is printed exactly as typed in the admin panel."""
+    """Price as the reader of that language writes it: €9.99, 9,99 €, € 9,99.
+    Anything that is not a number is printed exactly as typed in the admin panel."""
     sep, template = PRICE_FORMATS.get(lang, PRICE_FORMATS['en'])
     raw = str(price or '').strip()
     try:
@@ -1059,6 +1234,128 @@ def render_direct_sale(bdata, lang):
         </div>"""
 
 
+def render_book_detail(data, book, lang, synopsis_html, series=None):
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    bdata = book['i18n'].get(lang) or book['i18n'].get('en')
+    cover = bdata.get('cover') or 'images/common/cover-placeholder.jpg'
+    key = world_key(series)
+    BOOK_WORLD[book['id']] = key
+    excerpt_link = ''
+    if bdata.get('excerpt'):
+        excerpt_link = f'<div class="excerpt-link-cover"><a href="{excerpt_path(book["id"], lang)}" class="btn-secondary">{esc(s["read_excerpt"])}</a></div>'
+    links = [l for l in book.get('links', []) if l.get('lang', '').lower() == lang.lower()]
+    if links:
+        buy_html = ''.join(
+            f'<a href="{esc(l["url"])}" target="_blank" rel="noopener" class="buy-logo-link" title="Buy on {esc(l["platform"])}"><img src="/images/common/{l["platform"].lower()}.png" alt="{esc(l["platform"])}"></a>'
+            for l in links
+        )
+    else:
+        buy_html = f'<p>{esc(s["no_links_lang"])}</p>'
+    synopsis_html = synopsis_html or f'<p>{esc(s["synopsis_not_available"])}</p>'
+    aside = f"""
+                <div class="book-detail-cover">
+                    <img src="/{esc(cover)}" alt="{esc(bdata['title'])}" fetchpriority="high">
+                    {excerpt_link}
+                </div>"""
+    main = f"""
+                <div class="book-detail-info">
+                    {series_kicker(series, book, ui)}
+                    <h1>{esc(bdata['title'])}</h1>
+                    {f'<p class="book-genre">{esc(bdata["genre"])}</p>' if bdata.get('genre') else ''}
+                    {render_book_facts(data, book, lang, series)}
+                    <h2 class="book-section-title">{esc(s['synopsis'])}</h2><div class="synopsis">{synopsis_html}</div>
+                    {render_lead_magnet(bdata, lang)}
+                    {render_direct_sale(bdata, lang)}
+                    <h2 class="book-section-title">{esc(s['available_on'])}</h2>
+                    <div class="buy-links">{buy_html}</div>
+                </div>"""
+    world_attrs = f' data-world="{key}"' if key else ''
+    return f'<div class="world world--{key or "plain"} book-detail-view"{world_attrs}{tint_attr(book["id"])}>{split("book", aside, main)}</div>'
+
+
+def render_excerpt_page(book, lang, excerpt_html):
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    bdata = book['i18n'].get(lang) or book['i18n'].get('en')
+    key = BOOK_WORLD.get(book['id'], '')
+    world_attrs = f' data-world="{key}"' if key else ''
+    aside = f"""
+                <a href="{book_path(book['id'], lang)}" class="back-link">← {esc(s['back'])}</a>
+                <h1 class="page-title preview-title">{esc(s['excerpt_from'])} {esc(bdata['title'])}</h1>"""
+    main = f"""
+                <div class="reading-container">
+                    <article class="prose">{excerpt_html}</article>
+                    {render_lead_magnet(bdata, lang)}
+                </div>"""
+    return f'<div class="world world--{key or "plain"} reading-page"{world_attrs}{tint_attr(book["id"])}>{split("excerpt", aside, main)}</div>'
+
+
+def render_news_list_page(lang, articles):
+    """articles: list of dicts {slug, title, date, author, content_html}, newest first.
+    The whole article stands on the list page - a reader should not have to click
+    through to find out whether a piece of news concerns them."""
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    if not articles:
+        items = f'<p>{esc(s["no_news"])}</p>'
+    else:
+        items = ''
+        for a in articles:
+            items += f"""<article class="news-item">
+                <h2><a href="{news_article_path(a['slug'], lang)}">{esc(a['title'])}</a></h2>
+                <p class="news-meta"><span>{esc(a['date_fmt'])}</span> <span>{esc(s['by'])} {esc(a['author'])}</span></p>
+                <div class="news-content">{a['content_html']}</div>
+            </article>"""
+    aside = f'<h1 class="page-title">{esc(s["news_and_updates"])}</h1>'
+    return split('news', aside, f'<div class="news-list">{items}</div>')
+
+
+def render_news_article_page(lang, article, content_html):
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    aside = f"""
+                <a href="{news_path(lang)}" class="back-link">← {esc(s['back'])}</a>
+                <h1 class="page-title">{esc(article['title'])}</h1>
+                <p class="news-meta"><span>{esc(article['date_fmt'])}</span> <span>{esc(s['by'])} {esc(article['author'])}</span></p>"""
+    main = f'<article class="news-item"><div class="news-content">{content_html}</div></article>'
+    return split('article', aside, main)
+
+
+def render_about_page(data, lang, bio_html, author_photo):
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    name = author_name(data, lang)
+    aside = f"""
+                <div class="author-photo-large"><img src="/{esc(author_photo)}" alt="Photo of {esc(name)}"></div>"""
+    main = f"""
+                <div class="author-bio-content"><h1 class="page-title">{esc(s['about_the_author'])}</h1><p class="bio-text">{bio_html}</p></div>"""
+    return split('about', aside, main)
+
+
+def render_contact_page(lang):
+    ui = ui_lang_of(lang)
+    s = UI_STRINGS[ui]
+    aside = f"""
+                <h1 class="page-title">{esc(s['get_in_touch'])}</h1>
+                <p class="page-lede">{esc(s['contact_intro'])}</p>"""
+    main = f"""
+                <div class="contact-page">
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-group"><label for="name">{esc(s['name'])}</label><input type="text" id="name" name="name" autocomplete="name" required></div>
+                        <div class="form-group"><label for="email">{esc(s['email'])}</label><input type="email" id="email" name="email" autocomplete="email" spellcheck="false" required></div>
+                        <div class="form-group"><label for="message">{esc(s['message'])}</label><textarea id="message" name="message" rows="6" required></textarea></div>
+                        <button type="submit" class="btn">{esc(s['send_message'])}</button>
+                    </form>
+                    <div id="form-status"></div>
+                </div>"""
+    return split('contact', aside, main)
+
+
+def render_privacy_page(lang, title, body_html):
+    return split('text', f'<h1 class="page-title">{esc(title)}</h1>', f'<div class="text-page">{body_html}</div>')
+
+
 def store_row(entry, ui):
     """One purchasable edition: cover, what it is, and the way to buy it."""
     lang = entry['lang']
@@ -1070,7 +1367,7 @@ def store_row(entry, ui):
     excerpt = (f'<a class="store-excerpt" href="{excerpt_path(entry["id"], lang)}">'
                f'{esc(UI_STRINGS[ui]["read_excerpt_short"])}</a>') if entry.get('has_excerpt') else ''
     return f"""
-            <article class="store-item">
+            <article class="store-item"{tint_attr(entry['id'])}>
                 <a class="store-cover" href="{book_url}"><img src="/{esc(cover)}" alt="{esc(entry['title'])}" loading="lazy"></a>
                 <div class="store-body">
                     <p class="store-overline">{esc(overline)}</p>
@@ -1100,13 +1397,15 @@ def render_store_page(entries, lang):
         sections.append(head + f'<div class="store-list">{rows}</div>')
     terms_link = f'<a href="{terms_path(ui)}">{esc(s["terms_of_service"])}</a>'
     note = esc(s['store_note']).replace('{terms}', terms_link)
-    return f"""
-        <div class="container store-page">
-            <h1>{esc(s['store'])}</h1>
-            <p class="store-intro">{esc(s['store_intro'])}</p>
-            {''.join(sections)}
-            <p class="store-note">{note}</p>
-        </div>"""
+    aside = f"""
+                <h1 class="page-title">{esc(s['store'])}</h1>
+                <p class="page-lede">{esc(s['store_intro'])}</p>"""
+    main = f"""
+                <div class="store-page">
+                    {''.join(sections)}
+                    <p class="store-note">{note}</p>
+                </div>"""
+    return split('store', aside, main)
 
 
 def render_store_band(entries, lang):
@@ -1131,14 +1430,10 @@ def render_store_band(entries, lang):
 
 
 def render_terms_page(lang, title, body_html):
-    return f'<div class="container text-page"><h1>{esc(title)}</h1>{body_html}</div>'
-
-
-def render_privacy_page(lang, title, body_html):
-    return f'<div class="container text-page"><h1>{esc(title)}</h1>{body_html}</div>'
+    return split('text', f'<h1 class="page-title">{esc(title)}</h1>', f'<div class="text-page">{body_html}</div>')
 
 
 def render_404_page(lang='en'):
     ui = ui_lang_of(lang)
     s = UI_STRINGS[ui]
-    return f'<div class="container"><h1>{esc(s["not_found"])}</h1><p><a href="/">← {esc(s["back"])}</a></p></div>'
+    return split('text', f'<h1 class="page-title">{esc(s["not_found"])}</h1>', f'<p><a href="/">← {esc(s["back"])}</a></p>')
