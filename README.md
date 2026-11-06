@@ -12,12 +12,7 @@ python -m http.server 8040 --directory dist
 
 ## Editing content
 
-```
-python admin_server.py        # http://localhost:8050/admin
-```
-
-Edits go straight to `data.js` / `synopsis/` / `books/` / `news/` / `images/`. Use the admin panel's
-**Build** tab to regenerate `dist/` for local preview, and **Publish** to push straight to GitHub.
+Content is edited with a local admin panel that is kept only on the author's computer, outside this repository.
 
 ## Deployment
 

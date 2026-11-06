@@ -1,3 +1,8 @@
 dist/
 __pycache__/
 *.pyc
+
+# The admin panel runs only on the local computer and is never pushed
+admin/
+admin_server.py
+start.bat
